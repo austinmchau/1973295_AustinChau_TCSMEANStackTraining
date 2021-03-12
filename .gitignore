@@ -1,2 +1,9 @@
+# reports
 */*.docx
+
+# screenshots
 */*.png
+*/*.jpeg
+
+# source code zip files
+*/*.zip
