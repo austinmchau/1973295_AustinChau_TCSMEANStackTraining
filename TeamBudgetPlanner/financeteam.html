@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="main.css">
+    <script src="budgetplanner.js"></script>
+    <title>Finance Teams</title>
+</head>
+
+<body>
+    <h1>Annual Budget</h1>
+    <table id="budgetTable">
+        <colgroup>
+            <col span="2" class="names">
+            <col class="budget">
+        </colgroup>
+        <thead>
+            <tr>
+                <th>Client Name</th>
+                <th>Project Name</th>
+                <th>Budget</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+        <tfoot>
+            <tr>
+                <td colspan="2" align="right">Total</td>
+                <td id="budgetTotal"></td>
+            </tr>
+        </tfoot>
+    </table>
+    <script>
+        generateBudgetTable()
+    </script>
+
+    <div class="backNav"><a href="index.html">Back</a></div>
+</body>
+
+</html>
