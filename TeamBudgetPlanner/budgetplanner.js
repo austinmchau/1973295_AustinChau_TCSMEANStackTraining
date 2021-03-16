@@ -1,13 +1,16 @@
 /* Variables */
 
 var storageKey = "budgetEntries"
+var getStorage = () => {return sessionStorage}
 
 /* Adding Entries */
 
 function onBudgetFormSubmit() {
-    console.log("submitted")
     var entry = getBudgetFormData()
-    addBudgetEntry(entry)
+    if (entry !== null) {
+        addBudgetEntry(entry)
+        document.getElementById("addBudgetForm").reset()
+    }
 }
 
 function getBudgetFormData() {
@@ -16,7 +19,11 @@ function getBudgetFormData() {
     entry.projectName = document.getElementById("projectName").value;
     entry.budget = Number(document.getElementById("budget").value);
 
-    console.log("budget form: ", entry);
+    if (!entry.clientName || !entry.projectName || !budget) {
+        alert("All fields must be filled.")
+        return null;
+    }
+
     return entry
 }
 
@@ -34,7 +41,6 @@ function generateBudgetTable() {
 
         [entry.clientName, entry.projectName, entry.budget].forEach(item => {
             var cell = document.createElement("td")
-            console.log("item", item, item instanceof Number)
             cell.appendChild(document.createTextNode(
                 typeof item == 'number' ? item.toLocaleString('en-US', {style: "currency", currency: "USD"}) : item
             ))
@@ -54,7 +60,7 @@ function generateBudgetTable() {
 
 function getBudgetEntries() {
     var entries
-    var storedEntries = localStorage.getItem(storageKey)
+    var storedEntries = getStorage().getItem(storageKey)
     if (!storedEntries) {
         entires = []
     } else {
@@ -76,12 +82,12 @@ function getBudgetEntries() {
 function addBudgetEntry(entry) {
     var entries = getBudgetEntries()
     entries.push(entry)
-    localStorage.setItem(
+    getStorage().setItem(
         storageKey,
         JSON.stringify(entries)
     )
 }
 
 function resetBudgetEntry() {
-    localStorage.removeItem(storageKey)
+    getStorage().removeItem(storageKey)
 }
