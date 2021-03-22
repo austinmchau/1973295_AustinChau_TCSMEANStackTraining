@@ -2,7 +2,8 @@ var inventory = [
     {
         "id": "1",
         "name": "Laptop",
-        "price": 500
+        "price": 500,
+        "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/6/6d/Grizzly_Creek_Fire_-_8.23.20_e_01.jpg"
     },
     {
         "id": "2",
@@ -46,11 +47,18 @@ function updateListing() {
         var card = listingTemplate.cloneNode(true);
         console.debug("card: ", card);
         var nameLabel = card.querySelectorAll("h2")[0];
-        var priceLabel = card.querySelectorAll("h2")[1];
+        var priceLabel = card.querySelectorAll("p")[0];
         var quantityButton = card.querySelectorAll("input")[0];
+        var imagePreview = card.querySelectorAll("img")[0];
         nameLabel.textContent = "Name: " + entry.name;
         priceLabel.textContent = "Price: " + entry.price;
         quantityButton.onclick = (function (ev) { return updateCart({ itemId: entry.id }); });
+        if (!entry.imageUrl) {
+            imagePreview.remove();
+        }
+        else {
+            imagePreview.src = entry.imageUrl;
+        }
         listingArea.appendChild(card);
     });
 }

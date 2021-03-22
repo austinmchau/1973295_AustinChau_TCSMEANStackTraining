@@ -21,15 +21,18 @@
 
         <section class="mt-3">
             <template id="listingTemplate">
-                <div class="col-3 card">
-                    <div class="card-body">
-                        <h2>Name: </h2>
-                        <h2>Price: </h3>
-                        <input type="button" value="Add">
+                <div class="col-xs-12 col-4">
+                    <div class="card">
+                        <img class="card-img-top" src="" alt="no image">
+                        <div class="card-body">
+                            <h2 class="card-title">Name: </h2>
+                            <p class="card-text">Price: </p>
+                            <input type="button" value="Add" class="btn btn-primary">
+                        </div>
                     </div>
                 </div>
             </template>
-            <div id="listingArea" class="row mx-0"></div>
+            <div id="listingArea" class="row g-3"></div>
             <script>updateListing()</script>
 
         </section>
