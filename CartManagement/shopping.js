@@ -2,7 +2,7 @@
 /**
  * A mock db of all possible inventory for purchase.
  */
-var inventory = [
+const inventory = [
     {
         "id": "1",
         "name": "Laptop",
@@ -49,7 +49,7 @@ var inventory = [
 function formatAsCurrency(value) {
     return Intl.NumberFormat('en-US', {
         style: "currency",
-        currency: "USD"
+        currency: "USD",
     }).format(value);
 }
 /**
@@ -58,7 +58,7 @@ function formatAsCurrency(value) {
  * @returns The inventory item. Or if no match, null.
  */
 function inventoryFromId(id) {
-    var filtered = inventory.filter(function (item) { return item.id == id; });
+    const filtered = inventory.filter(item => item.id == id);
     if (!(filtered === null || filtered === void 0 ? void 0 : filtered.length)) {
         return null;
     }
@@ -70,29 +70,29 @@ function inventoryFromId(id) {
  * Provides interface with the underlying localStorage.
  * Provides function to update and retrieve info from the cart in different formats.
  */
-var Cart = /** @class */ (function () {
-    function Cart() {
+class Cart {
+    constructor() {
         // properties for accessing underlying storage
-        this.storage = function () { return localStorage; };
+        this.storage = () => localStorage;
         this.storageKey = "shoppingCart";
     }
-    Cart.getInstance = function () {
+    static getInstance() {
         if (!Cart.instance) {
             Cart.instance = new Cart();
         }
         return Cart.instance;
-    };
+    }
     /**
      * Clears the storage.
      */
-    Cart.prototype.clear = function () { this.storage().removeItem(this.storageKey); };
+    clear() { this.storage().removeItem(this.storageKey); }
     /**
      * Read from the storage and get the cart.
      * Represents by an object where the key is the inventory id, and value is the quantity.
      * @returns returns an object of the full cart.
      */
-    Cart.prototype.read = function () {
-        var store = this.storage().getItem(this.storageKey);
+    read() {
+        const store = this.storage().getItem(this.storageKey);
         if (store === null) {
             return {};
         }
@@ -106,18 +106,18 @@ var Cart = /** @class */ (function () {
                 return {};
             }
         }
-    };
+    }
     /**
      * Write a delta into the cart.
      * e.g. partialCart = { "1": -1 } means subtracting 1 quantity of item of id "1" from the current cart.
      * @param partialCart an object represents an item to be updated.
      */
-    Cart.prototype.write = function (partialCart) {
-        var cart = this.read();
-        for (var id in partialCart) {
+    write(partialCart) {
+        const cart = this.read();
+        for (const id in partialCart) {
             // if (!(id in cart)) { continue; }
-            var prev = id in cart ? cart[id] : 0;
-            var quantity = Math.max(0, prev + partialCart[id]);
+            const prev = id in cart ? cart[id] : 0;
+            const quantity = Math.max(0, prev + partialCart[id]);
             if (quantity == 0) {
                 if (id in cart) {
                     delete cart[id];
@@ -128,67 +128,65 @@ var Cart = /** @class */ (function () {
             }
         }
         try {
-            var json = JSON.stringify(cart);
+            const json = JSON.stringify(cart);
             this.storage().setItem(this.storageKey, json);
         }
         catch (error) {
             this.clear();
             console.error(error);
         }
-    };
+    }
     /**
      * API for adding or subtracting item into/from the cart.
      * @param itemId inventory item id.
      * @param quantity How many of item to be added to cart.
      */
-    Cart.prototype.updateCart = function (itemId, quantity) {
-        var _a;
-        this.write((_a = {}, _a[itemId] = quantity, _a));
-    };
+    updateCart(itemId, quantity) {
+        this.write({ [itemId]: quantity });
+    }
     /**
      * Transforms the cart into a list of item with quantity.
      * Used for displaying in the checkout table.
      * @returns a List of Objects containing the inventory item and its quantity in the cart.
      */
-    Cart.prototype.description = function () {
-        var cart = this.read();
-        return Object.keys(cart).map(function (k) {
+    description() {
+        const cart = this.read();
+        return Object.keys(cart).map(k => {
             return {
                 item: inventoryFromId(k),
                 quantity: cart[k]
             };
         });
-    };
+    }
     /**
      * Convenience method for getting the current quantity of a given item in the cart.
      * @param id inventory id.
      * @returns The quantity of the inventory item from the given id.
      */
-    Cart.prototype.quantityFromId = function (id) {
-        var cart = this.read();
+    quantityFromId(id) {
+        const cart = this.read();
         if (!(id in cart)) {
             return 0;
         }
         return cart[id];
-    };
+    }
     /**
      * Convenience method for getting the size of the cart.
      * @returns Count of all items in the cart, accounting for their quantities in the cart.
      */
-    Cart.prototype.cartSize = function () {
-        var cart = this.read();
-        return Object.keys(cart).map(function (k) { return cart[k]; }).reduce(function (prev, curr) { return prev + curr; }, 0);
-    };
-    return Cart;
-}());
+    cartSize() {
+        const cart = this.read();
+        return Object.keys(cart).map(k => cart[k]).reduce((prev, curr) => prev + curr, 0);
+    }
+}
 /* Listing Page */
 /**
  * Function that updates the cart size count at the top of the listing page.
  */
 function updateCartCount() {
-    var cartCount = document.getElementById("cartCount");
+    let cartCount = document.getElementById("cartCount");
     if (cartCount) {
-        cartCount.innerText = "" + Cart.getInstance().cartSize();
+        cartCount.innerText = `${Cart.getInstance().cartSize()}`;
     }
 }
 /**
@@ -198,45 +196,45 @@ function updateListing() {
     // Calls to update the cart count at least once, when generating the page.
     updateCartCount();
     // getting reference to the template and insertion point from DOM.
-    var listingArea = document.getElementById("listingArea");
-    var listingTemplate = document.getElementById("listingTemplate").content;
+    let listingArea = document.getElementById("listingArea");
+    let listingTemplate = document.getElementById("listingTemplate").content;
     /* cleaning up the listingArea first */
     while (listingArea === null || listingArea === void 0 ? void 0 : listingArea.firstChild) {
         listingArea.removeChild(listingArea.firstChild);
     }
     // iterate through the inventory
-    inventory.forEach(function (entry) {
+    inventory.forEach(entry => {
         // getting the elements from DOM
-        var card = listingTemplate.cloneNode(true);
-        var nameLabel = card.querySelectorAll("h2")[0];
-        var priceLabel = card.getElementById("priceLabel");
-        var quantitySubButton = card.querySelectorAll("button")[0];
-        var quantityLabel = card.getElementById("quantityLabel");
-        var quantityAddButton = card.querySelectorAll("button")[1];
-        var imagePreview = card.querySelectorAll("img")[0];
+        let card = listingTemplate.cloneNode(true);
+        let nameLabel = card.querySelectorAll("h2")[0];
+        let priceLabel = card.getElementById("priceLabel");
+        let quantitySubButton = card.querySelectorAll("button")[0];
+        let quantityLabel = card.getElementById("quantityLabel");
+        let quantityAddButton = card.querySelectorAll("button")[1];
+        let imagePreview = card.querySelectorAll("img")[0];
         // changing the label ids as we're inserting it back to DOM
-        var quantityLabelId = "quantityLabel-" + entry.id;
+        const quantityLabelId = `quantityLabel-${entry.id}`;
         quantityLabel.id = quantityLabelId;
-        var priceLabelId = "priceLabel-" + entry.id;
+        const priceLabelId = `priceLabel-${entry.id}`;
         priceLabel.id = priceLabelId;
         // changing the labels
-        nameLabel.textContent = "" + entry.name;
-        priceLabel.innerText = "" + formatAsCurrency(entry.price);
+        nameLabel.textContent = `${entry.name}`;
+        priceLabel.innerText = `${formatAsCurrency(entry.price)}`;
         // abstracting the functions that get the quantity for the particular item
-        var quantityFromId = function (id) { return "" + Cart.getInstance().quantityFromId(id); };
+        const quantityFromId = (id) => `${Cart.getInstance().quantityFromId(id)}`;
         // abstracting the callback for when the +/- buttons are clicked
-        var quantityButtonOnClick = function (ev, delta) {
+        const quantityButtonOnClick = (ev, delta) => {
             Cart.getInstance().updateCart(entry.id, delta);
-            var label = document.getElementById(quantityLabelId);
+            let label = document.getElementById(quantityLabelId);
             if (label !== null) {
                 label.innerText = quantityFromId(entry.id);
             }
             updateCartCount();
         };
         // updating the quantity labels and buttons
-        quantityLabel.innerText = "" + Cart.getInstance().quantityFromId(entry.id);
-        quantitySubButton.onclick = (function (ev) { return quantityButtonOnClick(ev, -1); });
-        quantityAddButton.onclick = (function (ev) { return quantityButtonOnClick(ev, 1); });
+        quantityLabel.innerText = `${Cart.getInstance().quantityFromId(entry.id)}`;
+        quantitySubButton.onclick = (ev => quantityButtonOnClick(ev, -1));
+        quantityAddButton.onclick = (ev => quantityButtonOnClick(ev, 1));
         // updating the image
         if (!entry.imageUrl) {
             imagePreview.remove();
@@ -254,39 +252,38 @@ function updateListing() {
  */
 function updateCheckoutTable() {
     // getting reference to the table.
-    var checkoutTable = document.getElementById("checkoutTable");
+    let checkoutTable = document.getElementById("checkoutTable");
     if (!checkoutTable) {
         console.error("Empty checkoutTable");
         return;
     }
     // getting reference to the entry template rows and the total row.
-    var tbody = checkoutTable.getElementsByTagName("tbody")[0];
-    var itemTemplate = checkoutTable.getElementsByTagName("template")[0].content;
-    var totalTemplate = checkoutTable.getElementsByTagName("template")[1].content;
+    let tbody = checkoutTable.getElementsByTagName("tbody")[0];
+    let itemTemplate = checkoutTable.getElementsByTagName("template")[0].content;
+    let totalTemplate = checkoutTable.getElementsByTagName("template")[1].content;
     // clear table if needed.
     while (tbody === null || tbody === void 0 ? void 0 : tbody.firstChild) {
         tbody.removeChild(tbody.firstChild);
     }
     // iterate through the cart. Also calculating the total.
-    var totalPrice = 0;
-    Cart.getInstance().description().forEach(function (_a) {
-        var item = _a.item, quantity = _a.quantity;
+    let totalPrice = 0;
+    Cart.getInstance().description().forEach(({ item, quantity }) => {
         // getting the ref to the cells.
-        var row = itemTemplate.cloneNode(true);
-        var _b = Array.from(row.querySelectorAll("td").values()), nameLabel = _b[0], listedPriceLabel = _b[1], quantityLabel = _b[2], subtotalPriceLabel = _b[3];
+        let row = itemTemplate.cloneNode(true);
+        let [nameLabel, listedPriceLabel, quantityLabel, subtotalPriceLabel] = Array.from(row.querySelectorAll("td").values());
         // updating the values
-        var subtotalPrice = item.price * quantity;
-        nameLabel.textContent = "" + item.name;
-        listedPriceLabel.textContent = "" + formatAsCurrency(item.price);
-        quantityLabel.textContent = "" + quantity;
-        subtotalPriceLabel.textContent = "" + formatAsCurrency(subtotalPrice);
+        let subtotalPrice = item.price * quantity;
+        nameLabel.textContent = `${item.name}`;
+        listedPriceLabel.textContent = `${formatAsCurrency(item.price)}`;
+        quantityLabel.textContent = `${quantity}`;
+        subtotalPriceLabel.textContent = `${formatAsCurrency(subtotalPrice)}`;
         // finalizing
         totalPrice += subtotalPrice;
         tbody.appendChild(row);
     });
     // update the total value
-    var totalRow = totalTemplate.cloneNode(true);
-    totalRow.querySelectorAll("th")[1].textContent = "" + Cart.getInstance().cartSize();
-    totalRow.querySelectorAll("th")[2].textContent = "" + formatAsCurrency(totalPrice);
+    let totalRow = totalTemplate.cloneNode(true);
+    totalRow.querySelectorAll("th")[1].textContent = `${Cart.getInstance().cartSize()}`;
+    totalRow.querySelectorAll("th")[2].textContent = `${formatAsCurrency(totalPrice)}`;
     tbody.appendChild(totalRow);
 }
