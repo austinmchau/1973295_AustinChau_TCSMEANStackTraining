@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <script src="shopping.js"></script>
+    <title>Inventory</title>
+</head>
+
+<body>
+    <header>
+        <nav class="navbar navbar-dark bg-dark">
+            <div class="container">
+                <a class="navbar-brand font-weight-bold" href="#">Shopping Cart</a>
+                <form class="form-inline">
+                    <div class="input-group">
+                        <div class="input-group-text">Cart size</div>
+                        <div class="input-group-text bg-white font-weight-bold" id="cartCount" style="font-weight: 700 !important;">0</div>
+                        <a href="checkout.html" class="btn btn-success">Checkout</a>
+                    </div>
+                </form>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+
+        <section class="mt-3">
+            <template id="listingTemplate">
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                    <div class="card">
+                        <img class="card-img-top" src="" alt="no image" style="height: 15rem; object-fit: contain;">
+                        <div class="card-body">
+                            <h2 class="card-title">Name: </h2>
+                            <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Card Group">
+                                <div class="input-group-text bg-light text-info" id="priceLabel" style="font-weight: 700 !important;">Price</div>
+                                <div class="input-group" role="group" aria-label="Change Quantity">
+                                    <button class="btn btn-primary btn-block">&minus;</button>
+                                    <div class="input-group-text" id="quantityLabel">0</div>
+                                    <button class="btn btn-primary btn-block">&plus;</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+            <div id="listingArea" class="row g-3"></div>
+            <script>updateListing()</script>
+
+        </section>
+        <footer>
+            <br />
+        </footer>
+    </div>
+</body>
+
+</html>
