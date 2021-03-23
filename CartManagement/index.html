@@ -12,16 +12,25 @@
 </head>
 
 <body>
-    <div class="container-fluid">
-        <header>
-            <h1>Shopping Cart</h1>
-            <p>Cart size: <span id="cartCount">0</span></p>
-            <a href="checkout.html" class="btn btn-success">Checkout</a>
-        </header>
+    <header>
+        <nav class="navbar navbar-dark bg-dark">
+            <div class="container">
+                <a class="navbar-brand font-weight-bold" href="#">Shopping Cart</a>
+                <form class="form-inline">
+                    <div class="input-group">
+                        <div class="input-group-text">Cart size</div>
+                        <div class="input-group-text bg-white font-weight-bold" id="cartCount">0</div>
+                        <a href="checkout.html" class="btn btn-success">Checkout</a>
+                    </div>
+                </form>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
 
         <section class="mt-3">
             <template id="listingTemplate">
-                <div class="col-xs-12 col-4">
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
                     <div class="card">
                         <img class="card-img-top" src="" alt="no image" style="height: 15rem; object-fit: contain;">
                         <div class="card-body">

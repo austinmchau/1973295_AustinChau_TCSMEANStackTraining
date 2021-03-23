@@ -110,8 +110,14 @@ class Cart {
         console.debug("write cart: ", cart);
         console.debug("partial cart: ", partialCart);
         for (const id in partialCart) {
-            if (!(id in cart)) { cart[id] = 0; }
-            cart[id] = Math.max(0, cart[id] + partialCart[id]);
+            // if (!(id in cart)) { continue; }
+            const prev = id in cart ? cart[id] : 0;
+            const quantity = Math.max(0, prev + partialCart[id]);
+            if (quantity == 0 && id in cart) {
+                delete cart[id];
+            } else {
+                cart[id] = quantity;
+            }
         }
         console.debug("write cart after: ", cart);
         try {
@@ -146,7 +152,7 @@ class Cart {
 
     cartSize(): number {
         const cart = this.read();
-        return Object.keys(cart).map(k => cart[k]).reduce((prev, curr) => prev + curr);
+        return Object.keys(cart).map(k => cart[k]).reduce((prev, curr) => prev + curr, 0);
     }
 }
 
@@ -160,6 +166,9 @@ function updateCartCount() {
 }
 
 function updateListing() {
+
+    updateCartCount();
+
     let listingArea = document.getElementById("listingArea");
     let listingTemplate = (document.getElementById("listingTemplate") as HTMLTemplateElement).content;
 

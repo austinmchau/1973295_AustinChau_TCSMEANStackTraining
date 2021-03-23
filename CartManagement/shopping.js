@@ -93,10 +93,15 @@ var Cart = /** @class */ (function () {
         console.debug("write cart: ", cart);
         console.debug("partial cart: ", partialCart);
         for (var id in partialCart) {
-            if (!(id in cart)) {
-                cart[id] = 0;
+            // if (!(id in cart)) { continue; }
+            var prev = id in cart ? cart[id] : 0;
+            var quantity = Math.max(0, prev + partialCart[id]);
+            if (quantity == 0 && id in cart) {
+                delete cart[id];
             }
-            cart[id] = Math.max(0, cart[id] + partialCart[id]);
+            else {
+                cart[id] = quantity;
+            }
         }
         console.debug("write cart after: ", cart);
         try {
@@ -131,7 +136,7 @@ var Cart = /** @class */ (function () {
     };
     Cart.prototype.cartSize = function () {
         var cart = this.read();
-        return Object.keys(cart).map(function (k) { return cart[k]; }).reduce(function (prev, curr) { return prev + curr; });
+        return Object.keys(cart).map(function (k) { return cart[k]; }).reduce(function (prev, curr) { return prev + curr; }, 0);
     };
     return Cart;
 }());
@@ -143,6 +148,7 @@ function updateCartCount() {
     }
 }
 function updateListing() {
+    updateCartCount();
     var listingArea = document.getElementById("listingArea");
     var listingTemplate = document.getElementById("listingTemplate").content;
     console.debug("listingArea: ", listingArea);
