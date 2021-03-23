@@ -185,7 +185,7 @@ function updateListing() {
         let card = listingTemplate.cloneNode(true) as DocumentFragment;
         console.debug("card: ", card);
         let nameLabel = card.querySelectorAll("h2")[0];
-        let priceLabel = card.querySelectorAll("p")[0];
+        let priceLabel = card.getElementById("priceLabel");
 
         let quantitySubButton = card.querySelectorAll("button")[0];
         let quantityLabel = card.getElementById("quantityLabel");
@@ -193,20 +193,22 @@ function updateListing() {
 
         let imagePreview = card.querySelectorAll("img")[0];
 
-        // changing the quantityLabel id as we're inserting it back to DOM
-        const labelId = `quantityLabel-${entry.id}`;
-        quantityLabel.id = labelId;
+        // changing the label ids as we're inserting it back to DOM
+        const quantityLabelId = `quantityLabel-${entry.id}`;
+        quantityLabel.id = quantityLabelId;
+        const priceLabelId = `priceLabel-${entry.id}`;
+        priceLabel.id = priceLabelId;
 
         // changing the labels
         nameLabel.textContent = `${entry.name}`;
-        priceLabel.textContent = `Price: ${formatAsCurrency(entry.price)}`;
+        priceLabel.innerText = `${formatAsCurrency(entry.price)}`;
 
         // abstracting the functions that get the quantity for the particular item
         const quantityFromId = (id: string) => `${Cart.getInstance().quantityFromId(id)}`;
         // abstracting the callback for when the +/- buttons are clicked
         const quantityButtonOnClick = (ev: Event, delta: number) => {
             Cart.getInstance().updateCart(entry.id, delta);
-            let label = document.getElementById(labelId);
+            let label = document.getElementById(quantityLabelId);
             if (label !== null) { label.innerText = quantityFromId(entry.id); }
             updateCartCount();
         }
@@ -262,6 +264,7 @@ function updateCheckoutTable() {
         tbody.appendChild(row);
     })
     let totalRow = totalTemplate.cloneNode(true) as DocumentFragment;
-    totalRow.querySelectorAll("th")[1].textContent = `${formatAsCurrency(totalPrice)}`;
+    totalRow.querySelectorAll("th")[1].textContent = `${Cart.getInstance().cartSize()}`;
+    totalRow.querySelectorAll("th")[2].textContent = `${formatAsCurrency(totalPrice)}`;
     tbody.appendChild(totalRow);
 }
