@@ -138,14 +138,26 @@ class Cart {
         })
     }
 
-    quantityFromId(id: string): number | null {
+    quantityFromId(id: string): number {
         const cart = this.read();
-        if (!(id in cart)) { return null; }
+        if (!(id in cart)) { return 0; }
         return cart[id];
+    }
+
+    cartSize(): number {
+        const cart = this.read();
+        return Object.keys(cart).map(k => cart[k]).reduce((prev, curr) => prev + curr);
     }
 }
 
 /* Listing Page */
+
+function updateCartCount() {
+    let cartCount = document.getElementById("cartCount");
+    if (cartCount) {
+        cartCount.innerText = `${Cart.getInstance().cartSize()}`;
+    }
+}
 
 function updateListing() {
     let listingArea = document.getElementById("listingArea");
@@ -160,38 +172,49 @@ function updateListing() {
     }
 
     inventory.forEach(entry => {
+        // getting the elements from DOM
         let card = listingTemplate.cloneNode(true) as DocumentFragment;
         console.debug("card: ", card);
         let nameLabel = card.querySelectorAll("h2")[0];
         let priceLabel = card.querySelectorAll("p")[0];
+
         let quantitySubButton = card.querySelectorAll("button")[0];
         let quantityLabel = card.getElementById("quantityLabel");
         let quantityAddButton = card.querySelectorAll("button")[1];
+
         let imagePreview = card.querySelectorAll("img")[0];
-        nameLabel.textContent = `${entry.name}`;
-        priceLabel.textContent = `Price: ${formatAsCurrency(entry.price)}`;
+
+        // changing the quantityLabel id as we're inserting it back to DOM
         const labelId = `quantityLabel-${entry.id}`;
         quantityLabel.id = labelId;
+
+        // changing the labels
+        nameLabel.textContent = `${entry.name}`;
+        priceLabel.textContent = `Price: ${formatAsCurrency(entry.price)}`;
+
+        // abstracting the functions that get the quantity for the particular item
+        const quantityFromId = (id: string) => `${Cart.getInstance().quantityFromId(id)}`;
+        // abstracting the callback for when the +/- buttons are clicked
+        const quantityButtonOnClick = (ev: Event, delta: number) => {
+            Cart.getInstance().updateCart(entry.id, delta);
+            let label = document.getElementById(labelId);
+            if (label !== null) { label.innerText = quantityFromId(entry.id); }
+            updateCartCount();
+        }
+
+        // updating the quantity labels and buttons
         quantityLabel.innerText = `${Cart.getInstance().quantityFromId(entry.id)}`;
-        quantitySubButton.onclick = (ev => {
-            Cart.getInstance().updateCart(entry.id, -1);
-            let label = document.getElementById(labelId)
-            if (label !== null) {
-                label.innerText = `${Cart.getInstance().quantityFromId(entry.id)}`;
-            }
-        });
-        quantityAddButton.onclick = (ev => {
-            Cart.getInstance().updateCart(entry.id, 1);
-            let label = document.getElementById(labelId)
-            if (label !== null) {
-                label.innerText = `${Cart.getInstance().quantityFromId(entry.id)}`;
-            }
-        });
+        quantitySubButton.onclick = (ev => quantityButtonOnClick(ev, -1));
+        quantityAddButton.onclick = (ev => quantityButtonOnClick(ev, 1));
+
+        // updating the image
         if (!entry.imageUrl) {
             imagePreview.remove();
         } else {
             imagePreview.src = entry.imageUrl;
         }
+
+        // finally, append the new fragment back to DOM
         listingArea.appendChild(card);
     })
 }

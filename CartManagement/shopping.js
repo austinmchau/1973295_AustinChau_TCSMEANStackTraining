@@ -125,13 +125,23 @@ var Cart = /** @class */ (function () {
     Cart.prototype.quantityFromId = function (id) {
         var cart = this.read();
         if (!(id in cart)) {
-            return null;
+            return 0;
         }
         return cart[id];
+    };
+    Cart.prototype.cartSize = function () {
+        var cart = this.read();
+        return Object.keys(cart).map(function (k) { return cart[k]; }).reduce(function (prev, curr) { return prev + curr; });
     };
     return Cart;
 }());
 /* Listing Page */
+function updateCartCount() {
+    var cartCount = document.getElementById("cartCount");
+    if (cartCount) {
+        cartCount.innerText = "" + Cart.getInstance().cartSize();
+    }
+}
 function updateListing() {
     var listingArea = document.getElementById("listingArea");
     var listingTemplate = document.getElementById("listingTemplate").content;
@@ -142,6 +152,7 @@ function updateListing() {
         listingArea.removeChild(listingArea.firstChild);
     }
     inventory.forEach(function (entry) {
+        // getting the elements from DOM
         var card = listingTemplate.cloneNode(true);
         console.debug("card: ", card);
         var nameLabel = card.querySelectorAll("h2")[0];
@@ -150,31 +161,35 @@ function updateListing() {
         var quantityLabel = card.getElementById("quantityLabel");
         var quantityAddButton = card.querySelectorAll("button")[1];
         var imagePreview = card.querySelectorAll("img")[0];
-        nameLabel.textContent = "" + entry.name;
-        priceLabel.textContent = "Price: " + formatAsCurrency(entry.price);
+        // changing the quantityLabel id as we're inserting it back to DOM
         var labelId = "quantityLabel-" + entry.id;
         quantityLabel.id = labelId;
+        // changing the labels
+        nameLabel.textContent = "" + entry.name;
+        priceLabel.textContent = "Price: " + formatAsCurrency(entry.price);
+        // abstracting the functions that get the quantity for the particular item
+        var quantityFromId = function (id) { return "" + Cart.getInstance().quantityFromId(id); };
+        // abstracting the callback for when the +/- buttons are clicked
+        var quantityButtonOnClick = function (ev, delta) {
+            Cart.getInstance().updateCart(entry.id, delta);
+            var label = document.getElementById(labelId);
+            if (label !== null) {
+                label.innerText = quantityFromId(entry.id);
+            }
+            updateCartCount();
+        };
+        // updating the quantity labels and buttons
         quantityLabel.innerText = "" + Cart.getInstance().quantityFromId(entry.id);
-        quantitySubButton.onclick = (function (ev) {
-            Cart.getInstance().updateCart(entry.id, -1);
-            var label = document.getElementById(labelId);
-            if (label !== null) {
-                label.innerText = "" + Cart.getInstance().quantityFromId(entry.id);
-            }
-        });
-        quantityAddButton.onclick = (function (ev) {
-            Cart.getInstance().updateCart(entry.id, 1);
-            var label = document.getElementById(labelId);
-            if (label !== null) {
-                label.innerText = "" + Cart.getInstance().quantityFromId(entry.id);
-            }
-        });
+        quantitySubButton.onclick = (function (ev) { return quantityButtonOnClick(ev, -1); });
+        quantityAddButton.onclick = (function (ev) { return quantityButtonOnClick(ev, 1); });
+        // updating the image
         if (!entry.imageUrl) {
             imagePreview.remove();
         }
         else {
             imagePreview.src = entry.imageUrl;
         }
+        // finally, append the new fragment back to DOM
         listingArea.appendChild(card);
     });
 }
