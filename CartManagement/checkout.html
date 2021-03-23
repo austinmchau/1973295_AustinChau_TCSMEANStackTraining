@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <script src="shopping.js"></script>
+    <title>Shopping Cart</title>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <header>
+            <h1>Shopping Cart Checkout</h1>
+        </header>
+
+        <section>
+            <h2>Your current Shopping Cart</h2>
+            <table id="checkoutTable" class="table table-bordered table-striped">
+                <template id="checkoutTBodyRow">
+                    <tr>
+                        <td></td>
+                        <td style="text-align: right !important;"></td>
+                        <td style="text-align: right !important;"></td>
+                    </tr>
+                </template>
+                <template id="checkoutTotalRow">
+                    <tr class="bg-success">
+                        <th scope="row" colspan="2">Total</th>
+                        <th scope="row" style="text-align: right !important;"></th>
+                    </tr>
+                </template>
+                <thead>
+                    <tr class="bg-primary" style="text-align: center !important;">
+                        <th scope="col">Item Name</th>
+                        <th scope="col">Count</th>
+                        <th scope="col">Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            <script>updateCheckoutTable()</script>
+        </section>
+
+        <footer>
+            <br />
+        </footer>
+
+    </div>
+</body>
+
+</html>

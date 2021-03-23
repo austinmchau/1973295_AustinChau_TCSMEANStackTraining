@@ -16,18 +16,22 @@
         <header>
             <h1>Shopping Cart</h1>
             <p>Cart size: <span>0</span></p>
-            <input type="button" value="Checkout">
+            <a href="checkout.html" class="btn btn-success">Checkout</a>
         </header>
 
         <section class="mt-3">
             <template id="listingTemplate">
                 <div class="col-xs-12 col-4">
                     <div class="card">
-                        <img class="card-img-top" src="" alt="no image">
+                        <img class="card-img-top" src="" alt="no image" style="height: 15rem; object-fit: contain;">
                         <div class="card-body">
                             <h2 class="card-title">Name: </h2>
                             <p class="card-text">Price: </p>
-                            <input type="button" value="Add" class="btn btn-primary">
+                            <div class="input-group" role="group" aria-label="Change Quantity">
+                                <button class="btn btn-primary btn-block">&minus;</button>
+                                <div class="input-group-text" id="quantityLabel">0</div>
+                                <button class="btn btn-primary btn-block">&plus;</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -36,6 +40,9 @@
             <script>updateListing()</script>
 
         </section>
+        <footer>
+            <br />
+        </footer>
     </div>
 </body>
 
