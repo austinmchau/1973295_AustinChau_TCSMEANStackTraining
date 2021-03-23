@@ -28,14 +28,15 @@
             <table id="checkoutTable" class="table table-bordered table-striped">
                 <template id="checkoutTBodyRow">
                     <tr>
-                        <td></td>
-                        <td style="text-align: right !important;"></td>
-                        <td style="text-align: right !important;"></td>
+                        <td>Name</td>
+                        <td style="text-align: right !important;">List Price</td>
+                        <td style="text-align: right !important;">Count</td>
+                        <td style="text-align: right !important;">Subtotal</td>
                     </tr>
                 </template>
                 <template id="checkoutTotalRow">
                     <tr class="bg-success text-light">
-                        <th scope="row" style="text-align: right !important;">Total</th>
+                        <th scope="row" colspan="2" style="text-align: right !important;">Total</th>
                         <th scope="row" style="text-align: right !important;">0</th>
                         <th scope="row" style="text-align: right !important;"></th>
                     </tr>
@@ -43,6 +44,7 @@
                 <thead>
                     <tr class="bg-primary" style="text-align: center !important;">
                         <th scope="col">Item Name</th>
+                        <th scope="col">Listed Price</th>
                         <th scope="col">Count</th>
                         <th scope="col">Price</th>
                     </tr>

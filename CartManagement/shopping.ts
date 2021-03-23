@@ -113,8 +113,8 @@ class Cart {
             // if (!(id in cart)) { continue; }
             const prev = id in cart ? cart[id] : 0;
             const quantity = Math.max(0, prev + partialCart[id]);
-            if (quantity == 0 && id in cart) {
-                delete cart[id];
+            if (quantity == 0) {
+                if (id in cart) { delete cart[id]; }
             } else {
                 cart[id] = quantity;
             }
@@ -251,16 +251,15 @@ function updateCheckoutTable() {
     let totalPrice = 0;
     Cart.getInstance().description().forEach(({ item, quantity }) => {
         let row = itemTemplate.cloneNode(true) as DocumentFragment;
-        let nameLabel = row.querySelectorAll("td")[0];
-        let quantityLabel = row.querySelectorAll("td")[1];
-        let priceLabel = row.querySelectorAll("td")[2];
+        let [nameLabel, listedPriceLabel, quantityLabel, subtotalPriceLabel] = Array.from(row.querySelectorAll("td").values())
 
-        let itemPrice = item.price * quantity;
+        let subtotalPrice = item.price * quantity;
         nameLabel.textContent = `${item.name}`;
+        listedPriceLabel.textContent = `${formatAsCurrency(item.price)}`;
         quantityLabel.textContent = `${quantity}`;
-        priceLabel.textContent = `${formatAsCurrency(itemPrice)}`;
+        subtotalPriceLabel.textContent = `${formatAsCurrency(subtotalPrice)}`;
 
-        totalPrice += itemPrice;
+        totalPrice += subtotalPrice;
         tbody.appendChild(row);
     })
     let totalRow = totalTemplate.cloneNode(true) as DocumentFragment;

@@ -96,8 +96,10 @@ var Cart = /** @class */ (function () {
             // if (!(id in cart)) { continue; }
             var prev = id in cart ? cart[id] : 0;
             var quantity = Math.max(0, prev + partialCart[id]);
-            if (quantity == 0 && id in cart) {
-                delete cart[id];
+            if (quantity == 0) {
+                if (id in cart) {
+                    delete cart[id];
+                }
             }
             else {
                 cart[id] = quantity;
@@ -221,14 +223,13 @@ function updateCheckoutTable() {
     Cart.getInstance().description().forEach(function (_a) {
         var item = _a.item, quantity = _a.quantity;
         var row = itemTemplate.cloneNode(true);
-        var nameLabel = row.querySelectorAll("td")[0];
-        var quantityLabel = row.querySelectorAll("td")[1];
-        var priceLabel = row.querySelectorAll("td")[2];
-        var itemPrice = item.price * quantity;
+        var _b = Array.from(row.querySelectorAll("td").values()), nameLabel = _b[0], listedPriceLabel = _b[1], quantityLabel = _b[2], subtotalPriceLabel = _b[3];
+        var subtotalPrice = item.price * quantity;
         nameLabel.textContent = "" + item.name;
+        listedPriceLabel.textContent = "" + formatAsCurrency(item.price);
         quantityLabel.textContent = "" + quantity;
-        priceLabel.textContent = "" + formatAsCurrency(itemPrice);
-        totalPrice += itemPrice;
+        subtotalPriceLabel.textContent = "" + formatAsCurrency(subtotalPrice);
+        totalPrice += subtotalPrice;
         tbody.appendChild(row);
     });
     var totalRow = totalTemplate.cloneNode(true);
