@@ -9,7 +9,7 @@ import { FormBuilder, FormControl, ValidationErrors, Validators } from '@angular
 export class LoginFormComponent implements OnInit {
 
   loginForm = this.fb.group({
-    username: ['', { updateOn: 'blur', validators: [Validators.required, Validators.minLength(4)] }],
+    username: ['',  [Validators.required, Validators.minLength(4)] ],
     password: ['', [Validators.required, Validators.minLength(8)]],
   });
 
@@ -23,7 +23,7 @@ export class LoginFormComponent implements OnInit {
   }
 
   get passwordFeedback() {
-    return this.username.valid ? "Looks good!" : "Please enter a valid password. Username must be at least 8 characters in length.";
+    return this.password.valid ? "Looks good!" : "Please enter a valid password. Username must be at least 8 characters in length.";
   }
 
   constructor(private fb: FormBuilder) { }
