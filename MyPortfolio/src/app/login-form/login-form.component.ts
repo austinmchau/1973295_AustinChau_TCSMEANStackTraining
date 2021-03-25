@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, ValidationErrors, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-login-form',
@@ -9,9 +9,22 @@ import { FormBuilder, Validators } from '@angular/forms';
 export class LoginFormComponent implements OnInit {
 
   loginForm = this.fb.group({
-    username: ['', Validators.required],
-    password: ['', Validators.required],
+    username: ['', { updateOn: 'blur', validators: [Validators.required, Validators.minLength(4)] }],
+    password: ['', [Validators.required, Validators.minLength(8)]],
   });
+
+  get msg() { return `${JSON.stringify({ username: this.username.valid, password: this.password.valid })}`; }
+
+  get username() { return this.loginForm.get("username") as FormControl; }
+  get password() { return this.loginForm.get("password") as FormControl; }
+
+  get usernameFeedback() {
+    return this.username.valid ? "Looks good!" : "Please enter a valid username. Username must be at least 4 characters in length.";
+  }
+
+  get passwordFeedback() {
+    return this.username.valid ? "Looks good!" : "Please enter a valid password. Username must be at least 8 characters in length.";
+  }
 
   constructor(private fb: FormBuilder) { }
 

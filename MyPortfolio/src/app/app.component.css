@@ -1,0 +1,18 @@
+/* You can add global styles to this file, and also import other style files */
+
+.form-control.ng-touched.ng-invalid{
+    border-color: #dc3545;
+}
+
+.custom-control-input.ng-invalid.ng-touched + label.custom-control-label{
+    color: #dc3545;
+}
+
+.custom-control-input.ng-invalid.ng-touched + label.custom-control-label:before,
+.custom-control-input.ng-invalid.ng-touched + label.custom-control-label:after
+{
+    border-color: #dc3545;
+}
+.custom-control-input.ng-invalid.ng-touched:focus~label.custom-control-label:before{
+     box-shadow: 0 0 0 0.2rem rgba(220,53,69,.25);
+}
