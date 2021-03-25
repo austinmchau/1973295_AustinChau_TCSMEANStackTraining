@@ -23,7 +23,10 @@ export class AddContactFormComponent implements OnInit {
     let contactName = this.addContactForm.get("contactName")?.value;
     let telNum = this.addContactForm.get("telNum")?.value;
 
-    console.log("got values: ", contactName, telNum);
-    this.contactsService.addContact({fullName: contactName, telNum: telNum});
+    if (contactName !== null && telNum !== null) {
+      this.contactsService.addContact({ fullName: contactName, telNum: telNum });
+    } else {
+      console.error("addContactForm onSubmit encountered null values", contactName, telNum);
+    }
   }
 }

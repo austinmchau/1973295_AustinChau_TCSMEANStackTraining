@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
 import { ContactsService } from '../contacts.service';
 
 @Component({
@@ -16,7 +15,6 @@ export class ContactsViewComponent implements OnInit {
 
   constructor(private contactsService: ContactsService) { }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void { }
 
 }

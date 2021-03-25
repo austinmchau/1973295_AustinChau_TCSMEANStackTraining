@@ -46,8 +46,6 @@ export class ContactsService {
     const newNames = new Set(contacts.map(c => c.fullName));
     const updatedContacts = [...existingContacts.filter(item => !(item.fullName in newNames)), ...contacts];
 
-    console.debug("store: ", contacts, existingContacts, newNames, updatedContacts);
-
     try {
       this.storage.setItem(this.storageKey, JSON.stringify(updatedContacts));
     } catch (error) {
