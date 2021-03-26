@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { UserAuthService } from '../user-auth.service';
 
 @Component({
   selector: 'app-profile-page',
@@ -8,10 +10,13 @@ import { Component, OnInit } from '@angular/core';
 export class ProfilePageComponent implements OnInit {
 
   username = "Austin";
+  loggedIn = (this.userAuth.currentToken !== undefined || this.userAuth.currentToken !== null);
 
-  constructor() { }
+  constructor(private router: Router, private userAuth: UserAuthService) { }
 
   ngOnInit(): void {
+    const currToken = this.userAuth.currentToken;
+    
   }
 
 }

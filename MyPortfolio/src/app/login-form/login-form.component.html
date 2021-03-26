@@ -20,7 +20,7 @@
 					<button type="submit" class="btn btn-primary mr-2">Login</button>
 					<button type="button" class="btn btn-info" routerLink="/signup">Signup</button>
 				</div>
-				<div *ngIf="loginMessage !== null" [ngClass]="{'invalid-feedback': loginMessage.valid, 'd-block': true}">{{loginMessage?.msg || ""}}</div>
+				<div *ngIf="loginMessage !== null" [ngClass]="{'valid-feedback': loginMessage.valid, 'invalid-feedback': !loginMessage.valid, 'd-block': true}">{{loginMessage?.msg || ""}}</div>
 			</div>
 		</div>
 	</form>

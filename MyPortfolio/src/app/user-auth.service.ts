@@ -5,6 +5,11 @@ export interface AuthIdentity {
   password: string,
 }
 
+export interface User extends AuthIdentity {
+  firstName: string,
+  lastName: string,
+}
+
 export class AuthError extends Error {
   constructor(...params: any) {
     super(...params);
@@ -42,7 +47,7 @@ export class UserAuthService {
   async authenticate(identity: AuthIdentity): Promise<boolean> {
     try {
       const users = await this.retrieve()
-      return (identity.username in users && users[identity.username] === identity.password);
+      return (identity.username in users && users[identity.username].password === identity.password);
 
     } catch (error) {
       console.error(error);
@@ -50,13 +55,18 @@ export class UserAuthService {
     }
   }
 
-  async addUser(identity: AuthIdentity) {
+  async addUser(identity: User) {
     try {
       await this.store(identity);
     } catch (error) {
       if (error instanceof RetrieveError) { this.usersStorage.removeItem(this.usersStorageKey); }
       throw error;
     }
+  }
+
+  async getUser(username: string): Promise<User | null> {
+    return this.retrieve()
+      .then(users => username in users ? users[username] : null)
   }
 
   set currentToken(identity: AuthIdentity) {
@@ -67,7 +77,7 @@ export class UserAuthService {
     return JSON.parse(this.tokenStorage.getItem(this.tokenStorageKey) ?? 'null');
   }
 
-  private async retrieve(): Promise<{ [username: string]: string; }> {
+  private async retrieve(): Promise<{ [username: string]: User; }> {
     return new Promise((resolve) => {
       const storedData = this.usersStorage.getItem(this.usersStorageKey) ?? '{}';
       if (!storedData) throw new RetrieveError(`Invalid Stored Data: ${storedData}`);
@@ -79,11 +89,11 @@ export class UserAuthService {
     })
   }
 
-  private async store(identity: AuthIdentity): Promise<void> {
+  private async store(identity: User): Promise<void> {
     return this.retrieve()
       .then((data) => {
         if (identity.username in data) throw new DuplicateUser();
-        return [data, { [identity.username]: identity.password }];
+        return [data, { [identity.username]: identity }];
       })
       .then(([data, newData]) => ({ ...data, ...newData }))
       .then((newData) => JSON.stringify(newData))

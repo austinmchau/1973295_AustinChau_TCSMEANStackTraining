@@ -5,7 +5,7 @@
 			<div class="form-group row">
 				<label [for]="row.formControlName" class="col-3 col-form-label">{{row.label}}</label>
 				<div class="col">
-					<input type="text" [formControlName]="row.formControlName" class="form-control" [autocomplete]="row.autocomplete">
+					<input [type]="row.inputType" [formControlName]="row.formControlName" class="form-control" [autocomplete]="row.autocomplete">
 					<div [ngClass]="{'d-block': true, 'valid-feedback': getControl(row.formControlName).valid, 'invalid-feedback': getControl(row.formControlName).invalid}" *ngIf="getControl(row.formControlName).touched && getControl(row.formControlName).dirty" style="white-space: pre-wrap;">
 						{{feedback(row.formControlName)}}</div>
 				</div>

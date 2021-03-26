@@ -18,10 +18,10 @@ export class SignupFormComponent implements OnInit {
   });
 
   divTemplate = [
-    { label: "First Name", formControlName: "firstName", autocomplete: "given-name" },
-    { label: "Last Name", formControlName: "lastName", autocomplete: "family-name" },
-    { label: "Username", formControlName: "username", autocomplete: "username" },
-    { label: "Password", formControlName: "password", autocomplete: "current-password" },
+    { label: "First Name", inputType: "text", formControlName: "firstName", autocomplete: "given-name" },
+    { label: "Last Name", inputType: "text", formControlName: "lastName", autocomplete: "family-name" },
+    { label: "Username", inputType: "text", formControlName: "username", autocomplete: "username" },
+    { label: "Password", inputType: "password", formControlName: "password", autocomplete: "current-password" },
   ]
 
   getControl(key: string) {
@@ -71,11 +71,13 @@ export class SignupFormComponent implements OnInit {
       })
     } else {
       console.debug("allValid");
-      const identity = {
+      const user = {
+        firstName: this.firstName.value,
+        lastName: this.lastName.value,
         username: this.username.value,
         password: this.password.value,
       }
-      this.userAuth.addUser(identity)
+      this.userAuth.addUser(user)
         .then(() => this.setSignupMessage("success"))
         .then(() => new Promise(resolve => setTimeout(resolve, 1500)))
         .then(() => this.router.navigate(['/login']))
