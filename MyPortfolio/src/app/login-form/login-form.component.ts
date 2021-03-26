@@ -22,12 +22,11 @@ export class LoginFormComponent implements OnInit {
   constructor(private fb: FormBuilder, private userAuth: UserAuthService) { }
 
   ngOnInit(): void {
-    try {
-      this.userAuth.addUser({ username: "testing123", password: "12345678" });
-    } catch (error) {
-      if (error instanceof DuplicateUser) return;
-      console.debug(error);
-    }
+    this.userAuth.addUser({ username: "testing123", password: "12345678" })
+      .catch(error => {
+        if (error instanceof DuplicateUser) return;
+        console.debug(error);
+      })
   }
 
   onSubmit() {

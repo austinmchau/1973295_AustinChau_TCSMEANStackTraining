@@ -80,7 +80,7 @@ export class UserAuthService {
   }
 
   private async store(identity: AuthIdentity): Promise<void> {
-    this.retrieve()
+    return this.retrieve()
       .then((data) => {
         if (identity.username in data) throw new DuplicateUser();
         return [data, { [identity.username]: identity.password }];
@@ -90,5 +90,8 @@ export class UserAuthService {
       .then((newData) => {
         this.usersStorage.setItem(this.usersStorageKey, newData);
       })
+      // .catch((error) => {
+      //   console.debug("caught");
+      // })
   }
 }
