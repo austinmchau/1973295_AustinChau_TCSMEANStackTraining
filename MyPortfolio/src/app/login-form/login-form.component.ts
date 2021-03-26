@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, ValidationErrors, Validators } from '@angular/forms';
-import { UserAuthService } from '../user-auth.service';
+import { DuplicateUser, UserAuthService } from '../user-auth.service';
 
 @Component({
   selector: 'app-login-form',
@@ -14,10 +14,10 @@ export class LoginFormComponent implements OnInit {
     password: ['', [Validators.required]],
   });
 
-  get msg() { return `${JSON.stringify({ username: this.username.valid, password: this.password.valid })}`; }
-
   get username() { return this.loginForm.get("username") as FormControl; }
   get password() { return this.loginForm.get("password") as FormControl; }
+
+  loginMessage: { msg: string, valid: boolean } | null = null;
 
   constructor(private fb: FormBuilder, private userAuth: UserAuthService) { }
 
@@ -25,12 +25,15 @@ export class LoginFormComponent implements OnInit {
     try {
       this.userAuth.addUser({ username: "testing123", password: "12345678" });
     } catch (error) {
+      if (error instanceof DuplicateUser) return;
       console.debug(error);
     }
   }
 
   onSubmit() {
     console.debug("validate form: ", this.loginForm.value);
+    this.loginMessage = null;
+
     [this.username, this.password].forEach(control => {
       if (control.invalid) { control.markAsTouched(); }
     });
@@ -46,6 +49,18 @@ export class LoginFormComponent implements OnInit {
       this.userAuth.authenticate(identity)
         .then(isAuthenticated => {
           console.debug("auth? ", isAuthenticated);
+          if (isAuthenticated) {
+            this.userAuth.currentToken = identity;
+            this.loginMessage = {
+              msg: `Welcome back, ${identity.username}! Logging in...`,
+              valid: true,
+            }
+          } else {
+            this.loginMessage = {
+              msg: "Incorrect login credentials. Please try again.",
+              valid: false,
+            };
+          }
         })
     }
   }

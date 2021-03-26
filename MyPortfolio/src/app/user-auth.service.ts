@@ -32,8 +32,10 @@ export class RetrieveError extends AuthError {
 })
 export class UserAuthService {
 
-  private storageKey = "siteUsers";
-  private get storage() { return localStorage; }
+  private usersStorageKey = "siteUsers";
+  private get usersStorage() { return localStorage; }
+  private tokenStorageKey = "currUser";
+  private get tokenStorage() { return sessionStorage; }
 
   constructor() { }
 
@@ -52,14 +54,22 @@ export class UserAuthService {
     try {
       await this.store(identity);
     } catch (error) {
-      if (error instanceof RetrieveError) { this.storage.removeItem(this.storageKey); }
+      if (error instanceof RetrieveError) { this.usersStorage.removeItem(this.usersStorageKey); }
       throw error;
     }
   }
 
+  set currentToken(identity: AuthIdentity) {
+    this.tokenStorage.setItem(this.tokenStorageKey, JSON.stringify(identity));
+  }
+
+  get currentToken(): AuthIdentity {
+    return JSON.parse(this.tokenStorage.getItem(this.tokenStorageKey) ?? 'null');
+  }
+
   private async retrieve(): Promise<{ [username: string]: string; }> {
     return new Promise((resolve) => {
-      const storedData = this.storage.getItem(this.storageKey) ?? '{}';
+      const storedData = this.usersStorage.getItem(this.usersStorageKey) ?? '{}';
       if (!storedData) throw new RetrieveError(`Invalid Stored Data: ${storedData}`);
 
       const data = JSON.parse(storedData);
@@ -78,7 +88,7 @@ export class UserAuthService {
       .then(([data, newData]) => { return { ...data, ...newData }; })
       .then((newData) => JSON.stringify(newData))
       .then((newData) => {
-        this.storage.setItem(this.storageKey, newData);
+        this.usersStorage.setItem(this.usersStorageKey, newData);
       })
   }
 }

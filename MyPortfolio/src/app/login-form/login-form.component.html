@@ -17,8 +17,8 @@
 		<div class="form-group row">
 			<div class="col offset-2">
 				<button type="submit" class="btn btn-primary">login</button>
+				<div *ngIf="loginMessage !== null" [ngClass]="{'invalid-feedback': loginMessage.valid, 'd-block': true}">{{loginMessage?.msg || ""}}</div>
 			</div>
 		</div>
 	</form>
-	<!-- <div>{{msg}}</div> -->
 </div>
