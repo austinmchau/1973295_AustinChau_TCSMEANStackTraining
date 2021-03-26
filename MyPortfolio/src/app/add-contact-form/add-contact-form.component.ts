@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { ContactsService } from '../contacts.service';
 
 @Component({
@@ -11,22 +11,28 @@ import { ContactsService } from '../contacts.service';
 export class AddContactFormComponent implements OnInit {
 
   addContactForm = this.fb.group({
-    contactName: ['', Validators.required],
+    contactName: ['', [Validators.required, Validators.minLength(2)]],
     telNum: ['', [Validators.required, Validators.pattern(/[0-9]{3}-[0-9]{3}-[0-9]{4}/)]],
   });
+
+  get contactName() { return this.addContactForm.get("contactName") as FormControl; }
+  get telNum() { return this.addContactForm.get("telNum") as FormControl; }
 
   constructor(private fb: FormBuilder, private contactsService: ContactsService) { }
 
   ngOnInit(): void { }
 
   onSubmit() {
-    let contactName = this.addContactForm.get("contactName")?.value;
-    let telNum = this.addContactForm.get("telNum")?.value;
+    const invalids = [this.contactName, this.telNum].filter(contact => contact.invalid);
 
-    if (contactName !== null && telNum !== null) {
-      this.contactsService.addContact({ fullName: contactName, telNum: telNum });
+    if (invalids.length) {
+      invalids.forEach(control => control.markAsTouched());
     } else {
-      console.error("addContactForm onSubmit encountered null values", contactName, telNum);
+      const contact = {
+        fullName: this.contactName.value,
+        telNum: this.telNum.value,
+      }
+      this.contactsService.addContact(contact);
     }
   }
 }
