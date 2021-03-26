@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserAuthService } from '../user-auth.service';
 
+/**
+ * The main container for the logged in profile page. Returns a message is not logged in.
+ */
 @Component({
   selector: 'app-profile-page',
   templateUrl: './profile-page.component.html',
@@ -21,6 +24,7 @@ export class ProfilePageComponent implements OnInit {
   constructor(private router: Router, private userAuth: UserAuthService) { }
 
   ngOnInit(): void {
+    // Check for whether there's an authorized user.
     const currToken = this.userAuth.currentToken;
     if (currToken !== null) {
       this.userAuth.getUser(currToken.username)

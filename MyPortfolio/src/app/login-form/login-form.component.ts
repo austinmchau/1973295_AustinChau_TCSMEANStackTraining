@@ -3,6 +3,9 @@ import { FormBuilder, FormControl, ValidationErrors, Validators } from '@angular
 import { Router } from '@angular/router';
 import { AuthError, AuthIdentity, DuplicateUser, UserAuthService } from '../user-auth.service';
 
+/**
+ * A component for the login form.
+ */
 @Component({
   selector: 'app-login-form',
   templateUrl: './login-form.component.html',
@@ -10,15 +13,29 @@ import { AuthError, AuthIdentity, DuplicateUser, UserAuthService } from '../user
 })
 export class LoginFormComponent implements OnInit {
 
+  /**
+   * reference to the form.
+   */
   loginForm = this.fb.group({
     username: ['', [Validators.required]],
     password: ['', [Validators.required]],
   });
 
+  // convenience getter for the FormControl
+
   get username() { return this.loginForm.get("username") as FormControl; }
   get password() { return this.loginForm.get("password") as FormControl; }
 
+  /**
+   * object for the message when user submits form.
+   */
   loginMessage: { msg: string, valid: boolean } | null = null;
+  
+  /**
+   * A function for setting loginMessage that would show when user submit the form.
+   * @param signal an enum for getting a valid loginMessage.
+   * @param identity an optional identity for formatting the message.
+   */
   setLoginMessage(signal: "success" | "authError" | null, identity?: AuthIdentity) {
     if (signal === "success" && (identity === undefined)) throw new Error("Missing identity in setLoginMessage");
     this.loginMessage = (() => {
@@ -32,16 +49,12 @@ export class LoginFormComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private router: Router, private userAuth: UserAuthService) { }
 
-  ngOnInit(): void {
-    // this.userAuth.addUser({ username: "testing123", password: "12345678" })
-    //   .catch(error => {
-    //     if (error instanceof DuplicateUser) return;
-    //     console.debug(error);
-    //   })
-  }
+  ngOnInit(): void { }
 
+  /**
+   * Function for when user submit form. Validate and navigate to profile page.
+   */
   onSubmit() {
-    console.debug("validate form: ", this.loginForm.value);
     this.loginMessage = null;
 
     const invalids = [this.username, this.password].filter(control => control.invalid);
@@ -51,8 +64,6 @@ export class LoginFormComponent implements OnInit {
     });
 
     if (!invalids.length) {
-      console.debug("all valid");
-
       const identity = {
         username: this.username.value,
         password: this.password.value,
@@ -60,7 +71,6 @@ export class LoginFormComponent implements OnInit {
 
       this.userAuth.authenticate(identity)
         .then(isAuthenticated => {
-          console.debug("auth? ", isAuthenticated);
           if (isAuthenticated) {
             this.userAuth.currentToken = identity;
             this.setLoginMessage("success", identity);

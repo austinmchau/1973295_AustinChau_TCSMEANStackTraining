@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ContactsService } from '../contacts.service';
 
+/**
+ * Component for the contact listing table.
+ */
 @Component({
   selector: 'app-contacts-view',
   templateUrl: './contacts-view.component.html',
@@ -9,6 +12,9 @@ import { ContactsService } from '../contacts.service';
 })
 export class ContactsViewComponent implements OnInit {
 
+  /**
+   * Getter for all stored contacts sorted by name ascending.
+   */
   get contacts() {
     return this.contactsService.contacts.sort((a, b) => a.fullName.localeCompare(b.fullName));
   }
