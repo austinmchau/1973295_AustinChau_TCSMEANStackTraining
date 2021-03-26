@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, ValidationErrors, Validators } from '@angular/forms';
+import { UserAuthService } from '../user-auth.service';
 
 @Component({
   selector: 'app-login-form',
@@ -18,18 +19,34 @@ export class LoginFormComponent implements OnInit {
   get username() { return this.loginForm.get("username") as FormControl; }
   get password() { return this.loginForm.get("password") as FormControl; }
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder, private userAuth: UserAuthService) { }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    try {
+      this.userAuth.addUser({ username: "testing123", password: "12345678" });
+    } catch (error) {
+      console.debug(error);
+    }
+  }
 
   onSubmit() {
-    console.log("validate form: ", this.loginForm.value);
+    console.debug("validate form: ", this.loginForm.value);
     [this.username, this.password].forEach(control => {
       if (control.invalid) { control.markAsTouched(); }
     });
 
     if (this.loginForm.valid) {
-      console.log("all valid");
+      console.debug("all valid");
+
+      const identity = {
+        username: this.username.value,
+        password: this.password.value,
+      }
+
+      this.userAuth.authenticate(identity)
+        .then(isAuthenticated => {
+          console.debug("auth? ", isAuthenticated);
+        })
     }
   }
 
