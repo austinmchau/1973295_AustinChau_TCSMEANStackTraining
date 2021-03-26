@@ -16,7 +16,11 @@ export class ProfilePageComponent implements OnInit {
 
   ngOnInit(): void {
     const currToken = this.userAuth.currentToken;
-    
+    this.userAuth.getUser(currToken.username)
+      .then(user => user?.firstName ?? "User")
+      .then(firstName => this.username = firstName)
+      .catch(error => console.error(error))
+
   }
 
 }
