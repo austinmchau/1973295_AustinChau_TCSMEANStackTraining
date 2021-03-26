@@ -9,8 +9,8 @@ import { FormBuilder, FormControl, ValidationErrors, Validators } from '@angular
 export class LoginFormComponent implements OnInit {
 
   loginForm = this.fb.group({
-    username: ['',  [Validators.required, Validators.minLength(4)] ],
-    password: ['', [Validators.required, Validators.minLength(8)]],
+    username: ['', [Validators.required]],
+    password: ['', [Validators.required]],
   });
 
   get msg() { return `${JSON.stringify({ username: this.username.valid, password: this.password.valid })}`; }
@@ -18,20 +18,19 @@ export class LoginFormComponent implements OnInit {
   get username() { return this.loginForm.get("username") as FormControl; }
   get password() { return this.loginForm.get("password") as FormControl; }
 
-  get usernameFeedback() {
-    return this.username.valid ? "Looks good!" : "Please enter a valid username. Username must be at least 4 characters in length.";
-  }
-
-  get passwordFeedback() {
-    return this.password.valid ? "Looks good!" : "Please enter a valid password. Username must be at least 8 characters in length.";
-  }
-
   constructor(private fb: FormBuilder) { }
 
   ngOnInit(): void { }
 
   onSubmit() {
     console.log("validate form: ", this.loginForm.value);
+    [this.username, this.password].forEach(control => {
+      if (control.invalid) { control.markAsTouched(); }
+    });
+
+    if (this.loginForm.valid) {
+      console.log("all valid");
+    }
   }
 
 }
