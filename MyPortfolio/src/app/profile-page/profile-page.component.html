@@ -1,0 +1,10 @@
+<div class="container">
+	<div *ngIf="loggedIn; else noToken">
+		<h1>Welcome, {{username}}</h1>
+		<app-add-contact-form></app-add-contact-form>
+		<app-contacts-view></app-contacts-view>
+	</div>
+	<ng-template #noToken>
+		<h1>You're not logged in. Please login.</h1>
+	</ng-template>
+</div>

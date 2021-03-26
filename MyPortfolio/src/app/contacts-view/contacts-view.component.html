@@ -1,0 +1,15 @@
+<h2>Existing Contacts</h2>
+<table class="table table-bordered table-striped">
+	<thead role="heading" class="bg-secondary text-light">
+		<tr>
+			<th>Name</th>
+			<th>Tel #</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr *ngFor="let entry of contacts">
+			<td>{{entry.fullName}}</td>
+			<td>{{entry.telNum}}</td>
+		</tr>
+	</tbody>
+</table>
