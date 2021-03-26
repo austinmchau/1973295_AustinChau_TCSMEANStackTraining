@@ -6,7 +6,8 @@
 				<label [for]="row.formControlName" class="col-3 col-form-label">{{row.label}}</label>
 				<div class="col">
 					<input type="text" [formControlName]="row.formControlName" class="form-control" [autocomplete]="row.autocomplete">
-					<div [ngClass]="{'d-block': true, 'valid-feedback': getControl(row.formControlName).valid, 'invalid-feedback': getControl(row.formControlName).invalid}" *ngIf="getControl(row.formControlName).dirty">{{feedback(row.formControlName)}}</div>
+					<div [ngClass]="{'d-block': true, 'valid-feedback': getControl(row.formControlName).valid, 'invalid-feedback': getControl(row.formControlName).invalid}" *ngIf="getControl(row.formControlName).touched && getControl(row.formControlName).dirty" style="white-space: pre-wrap;">
+						{{feedback(row.formControlName)}}</div>
 				</div>
 			</div>
 		</div>
@@ -14,6 +15,8 @@
 		<div class="form-group row">
 			<div class="col offset-3">
 				<button type="submit" class="btn btn-primary">Sign Up</button>
+				<div [ngClass]="{'d-block': true, 'valid-feedback': true}" *ngIf="signupComplete">You're signed up! Redirecting...
+				</div>
 			</div>
 		</div>
 	</form>

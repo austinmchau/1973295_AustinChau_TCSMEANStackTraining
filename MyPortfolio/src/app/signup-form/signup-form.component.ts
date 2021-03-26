@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-signup-form',
@@ -33,25 +34,27 @@ export class SignupFormComponent implements OnInit {
 
   feedback(key: string): string {
     const feedbacks: { [key: string]: () => string } = {
-      "firstName": () => this.firstName.valid ? "Looks good!" : "Please enter a valid First Name. It can only contain alphabets with a maximum of 12 characters.",
-      "lastName": () => this.lastName.valid ? "Looks good!" : "Please enter a valid Last Name. \nIt can only contain alphabets with a maximum of 12 characters.",
-      "username": () => this.username.valid ? "Looks good!" : "Please enter a valid username. Username must be at least 4 characters in length.",
-      "password": () => this.password.valid ? "Looks good!" : "Please enter a valid password. Username must be at least 8 characters in length.",
+      "firstName": () => this.firstName.valid ? "Looks good!" : "Please enter a valid First Name. \n It can only contain alphabets with a maximum of 12 characters.",
+      "lastName": () => this.lastName.valid ? "Looks good!" : "Please enter a valid Last Name. \n It can only contain alphabets with a maximum of 12 characters.",
+      "username": () => this.username.valid ? "Looks good!" : "Please enter a valid username. \n Username must be at least 4 characters in length.",
+      "password": () => this.password.valid ? "Looks good!" : "Please enter a valid password. \n Password must be at least 8 characters in length.",
     };
     if (!(key in feedbacks)) { console.error("invalid feedback key"); return "" }
     return feedbacks[key]();
   }
 
-  constructor(private fb: FormBuilder) { }
+  signupComplete = false;
 
-  ngOnInit(): void {
-  }
+  constructor(private fb: FormBuilder, private router: Router) { }
+
+  ngOnInit(): void { }
 
   onSubmit() {
     console.debug("onSubmit: ", this.signupForm.value);
     let allValid = true;
     [this.firstName, this.lastName, this.username, this.password].forEach(control => {
       if (control.invalid) {
+        control.markAsTouched();
         control.markAsDirty();
         allValid = false;
       }
@@ -59,6 +62,10 @@ export class SignupFormComponent implements OnInit {
 
     if (allValid) {
       console.debug("allValid");
+      this.signupComplete = true;
+      setTimeout(() => {
+        this.router.navigate(['/login']);
+      }, 1500);
     }
   }
 
