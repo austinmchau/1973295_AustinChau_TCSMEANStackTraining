@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, ValidationErrors, Validators } from '@angular/forms';
-import { DuplicateUser, UserAuthService } from '../user-auth.service';
+import { Router } from '@angular/router';
+import { AuthError, DuplicateUser, UserAuthService } from '../user-auth.service';
 
 @Component({
   selector: 'app-login-form',
@@ -19,7 +20,7 @@ export class LoginFormComponent implements OnInit {
 
   loginMessage: { msg: string, valid: boolean } | null = null;
 
-  constructor(private fb: FormBuilder, private userAuth: UserAuthService) { }
+  constructor(private fb: FormBuilder, private router: Router, private userAuth: UserAuthService) { }
 
   ngOnInit(): void {
     this.userAuth.addUser({ username: "testing123", password: "12345678" })
@@ -33,11 +34,13 @@ export class LoginFormComponent implements OnInit {
     console.debug("validate form: ", this.loginForm.value);
     this.loginMessage = null;
 
-    [this.username, this.password].forEach(control => {
-      if (control.invalid) { control.markAsTouched(); }
+    const invalids = [this.username, this.password].filter(control => control.invalid);
+
+    invalids.forEach(control => {
+      control.markAsTouched();
     });
 
-    if (this.loginForm.valid) {
+    if (!invalids.length) {
       console.debug("all valid");
 
       const identity = {
@@ -59,7 +62,13 @@ export class LoginFormComponent implements OnInit {
               msg: "Incorrect login credentials. Please try again.",
               valid: false,
             };
+            throw new AuthError();
           }
+        })
+        .then(() => new Promise(resolve => setTimeout(resolve, 1500)))
+        .then(() => this.router.navigate(["/profile"]))
+        .catch(error => {
+          if (error instanceof AuthError) return;
         })
     }
   }
