@@ -9,19 +9,21 @@ import { FormBuilder, FormControl, Validators } from '@angular/forms';
 export class SignupFormComponent implements OnInit {
 
   signupForm = this.fb.group({
-    firstName: ['', [Validators.required, Validators.pattern(/^\w{1,12}$/g)]],
-    lastName: ['', Validators.required, Validators.pattern(/^\w{1,12}$/g)],
+    firstName: ['', [Validators.required, Validators.pattern("^[a-zA-Z]{1,12}$")]],
+    lastName: ['', [Validators.required, Validators.pattern("^[a-zA-Z]{1,12}$")]],
     username: ['', [Validators.required, Validators.minLength(4)]],
     password: ['', [Validators.required, Validators.minLength(8)]],
   });
 
-  get msg() {
-    return `${JSON.stringify({
-      firstName: this.firstName.valid,
-      lastName: this.lastName.valid,
-      username: this.username.valid,
-      password: this.password.valid,
-    })}`;
+  divTemplate = [
+    { label: "First Name", formControlName: "firstName", autocomplete: "given-name" },
+    { label: "Last Name", formControlName: "lastName", autocomplete: "family-name" },
+    { label: "Username", formControlName: "username", autocomplete: "username" },
+    { label: "Password", formControlName: "password", autocomplete: "current-password" },
+  ]
+
+  getControl(key: string) {
+    return this.signupForm.get(key) as FormControl;
   }
 
   get firstName() { return this.signupForm.get("firstName") as FormControl; }
@@ -47,11 +49,17 @@ export class SignupFormComponent implements OnInit {
 
   onSubmit() {
     console.debug("onSubmit: ", this.signupForm.value);
+    let allValid = true;
     [this.firstName, this.lastName, this.username, this.password].forEach(control => {
       if (control.invalid) {
         control.markAsDirty();
+        allValid = false;
       }
     })
+
+    if (allValid) {
+      console.debug("allValid");
+    }
   }
 
 }

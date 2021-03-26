@@ -1,38 +1,20 @@
 <div class="container">
 	<form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
-		<div class="form-group row">
-			<label for="firstName" class="col-3 col-form-label">First Name</label>
-			<div class="col">
-				<input type="text" formControlName="firstName" class="form-control" autocomplete="given-name">
-				<div [ngClass]="{'d-block': true, 'valid-feedback': firstName.valid, 'invalid-feedback': firstName.invalid}" *ngIf="firstName.dirty">{{feedback("firstName")}}</div>
+
+		<div *ngFor="let row of divTemplate">
+			<div class="form-group row">
+				<label [for]="row.formControlName" class="col-3 col-form-label">{{row.label}}</label>
+				<div class="col">
+					<input type="text" [formControlName]="row.formControlName" class="form-control" [autocomplete]="row.autocomplete">
+					<div [ngClass]="{'d-block': true, 'valid-feedback': getControl(row.formControlName).valid, 'invalid-feedback': getControl(row.formControlName).invalid}" *ngIf="getControl(row.formControlName).dirty">{{feedback(row.formControlName)}}</div>
+				</div>
 			</div>
 		</div>
-		<div class="form-group row">
-			<label for="lastName" class="col-3 col-form-label">Last Name</label>
-			<div class="col">
-				<input type="text" formControlName="lastName" class="form-control" autocomplete="family-name">
-				<div [ngClass]="{'d-block': true, 'valid-feedback': lastName.valid, 'invalid-feedback': lastName.invalid}" *ngIf="lastName.dirty">{{feedback("lastName")}}</div>
-			</div>
-		</div>
-		<div class="form-group row">
-			<label for="username" class="col-3 col-form-label">username</label>
-			<div class="col">
-				<input type="text" formControlName="username" class="form-control" autocomplete="username">
-				<div [ngClass]="{'d-block': true, 'valid-feedback': username.valid, 'invalid-feedback': !username.valid}" *ngIf="username.dirty">{{feedback("username")}}</div>
-			</div>
-		</div>
-		<div class="form-group row">
-			<label for="password" class="col-3 col-form-label">password</label>
-			<div class="col">
-				<input type="password" formControlName="password" class="form-control" autocomplete="current-password">
-				<div [ngClass]="{'d-block': true, 'valid-feedback': password.valid, 'invalid-feedback': !password.valid}" *ngIf="password.dirty">{{feedback("password")}}</div>
-			</div>
-		</div>
+
 		<div class="form-group row">
 			<div class="col offset-3">
 				<button type="submit" class="btn btn-primary">Sign Up</button>
 			</div>
 		</div>
 	</form>
-	<!-- <div>{{msg}}</div> -->
 </div>
