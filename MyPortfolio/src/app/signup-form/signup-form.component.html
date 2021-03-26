@@ -15,8 +15,7 @@
 		<div class="form-group row">
 			<div class="col offset-3">
 				<button type="submit" class="btn btn-primary">Sign Up</button>
-				<div [ngClass]="{'d-block': true, 'valid-feedback': true}" *ngIf="signupComplete">You're signed up! Redirecting...
-				</div>
+				<div [ngClass]="{'d-block': true, 'valid-feedback': signupMessage?.valid, 'invalid-feedback': !signupMessage?.valid}" *ngIf="signupMessage !== null">{{signupMessage?.msg}}</div>
 			</div>
 		</div>
 	</form>

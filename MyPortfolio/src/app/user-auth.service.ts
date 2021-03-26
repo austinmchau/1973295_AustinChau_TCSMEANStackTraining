@@ -85,13 +85,13 @@ export class UserAuthService {
         if (identity.username in data) throw new DuplicateUser();
         return [data, { [identity.username]: identity.password }];
       })
-      .then(([data, newData]) => { return { ...data, ...newData }; })
+      .then(([data, newData]) => ({ ...data, ...newData }))
       .then((newData) => JSON.stringify(newData))
       .then((newData) => {
         this.usersStorage.setItem(this.usersStorageKey, newData);
       })
-      // .catch((error) => {
-      //   console.debug("caught");
-      // })
+    // .catch((error) => {
+    //   console.debug("caught");
+    // })
   }
 }
