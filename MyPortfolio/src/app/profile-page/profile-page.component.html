@@ -1,7 +1,6 @@
 <div class="container">
-	<h1>Welcome, {{username}}</h1>
-
 	<div *ngIf="loggedIn; else noToken">
+		<h1>Welcome, {{username}}</h1>
 		<app-add-contact-form></app-add-contact-form>
 		<app-contacts-view></app-contacts-view>
 	</div>

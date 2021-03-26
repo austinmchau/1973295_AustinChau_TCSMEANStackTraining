@@ -9,18 +9,26 @@ import { UserAuthService } from '../user-auth.service';
 })
 export class ProfilePageComponent implements OnInit {
 
-  username = "Austin";
-  loggedIn = (this.userAuth.currentToken !== undefined || this.userAuth.currentToken !== null);
+  /**
+   * name for the welcome message.
+   */
+  username = "User";
+  /**
+   * boolean for whether a valid user is logged in.
+   */
+  loggedIn = false;
 
   constructor(private router: Router, private userAuth: UserAuthService) { }
 
   ngOnInit(): void {
     const currToken = this.userAuth.currentToken;
-    this.userAuth.getUser(currToken.username)
-      .then(user => user?.firstName ?? "User")
-      .then(firstName => this.username = firstName)
-      .catch(error => console.error(error))
-
+    if (currToken !== null) {
+      this.userAuth.getUser(currToken.username)
+        .then(user => user?.firstName ?? "User")
+        .then(firstName => this.username = firstName)
+        .then(() => this.loggedIn = true)
+        .catch(error => console.error(error))
+    }
   }
 
 }
