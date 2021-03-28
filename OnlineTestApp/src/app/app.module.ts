@@ -6,12 +6,14 @@ import { AppComponent } from './app.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { QuizQuestionComponent } from './quiz-components/quiz-question/quiz-question.component';
 import { QuizComponent } from './quiz-components/quiz/quiz.component';
+import { QuizContainerComponent } from './components/quiz-container/quiz-container.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     QuizQuestionComponent,
-    QuizComponent
+    QuizComponent,
+    QuizContainerComponent
   ],
   imports: [
     BrowserModule,
