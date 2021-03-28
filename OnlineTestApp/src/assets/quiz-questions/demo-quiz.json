@@ -1,0 +1,35 @@
+{
+    "metadata": {
+        "name": "Demo Quiz",
+        "version": "1.0",
+        "question_version": "1.0"
+    },
+    "payload": {
+        "questions": [
+            {
+                "id": "0",
+                "type": "mc",
+                "q": "Which of the following polygon has 4 sides?",
+                "c": [
+                    {"id": 0, "text": "circle"},
+                    {"id": 1, "text": "square"},
+                    {"id": 2, "text": "triangle"},
+                    {"id": 3, "text": "pentagon"} 
+                ],
+                "a": {"id": 1} 
+            },
+            {
+                "id": "1",
+                "type": "mc",
+                "q": "Which of the following is not a state in the United States?",
+                "c": [
+                    {"id": 0, "text": "California"},
+                    {"id": 1, "text": "New York"},
+                    {"id": 2, "text": "Texas"},
+                    {"id": 3, "text": "Quebec"} 
+                ],
+                "a": {"id": 3} 
+            }
+        ]
+    }
+}
