@@ -1,3 +1,9 @@
-<p>quiz-question works!</p>
-
-<p>{{quizQuestion}}</p>
+<div>
+	<h2>{{questionText}}</h2>
+	<form>
+		<div *ngFor="let choice of choices" class="form-check">
+			<input class="form-check-input" type="radio" [name]="quizQuestion?.id" [id]="choice.id">
+			<label class="form-check-label" [for]="choice.id">{{choice.text}}</label>
+		</div>
+	</form>
+</div>

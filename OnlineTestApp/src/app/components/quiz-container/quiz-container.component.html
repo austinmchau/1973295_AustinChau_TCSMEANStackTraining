@@ -4,4 +4,6 @@
 	<li><a [routerLink]=[quiz]>{{quiz}}</a></li>
 </ul>
 
-<app-quiz-question [question]="testQuestion"></app-quiz-question>
+<div *ngFor="let question of questions">
+	<app-quiz-question [question]="question"></app-quiz-question>
+</div>

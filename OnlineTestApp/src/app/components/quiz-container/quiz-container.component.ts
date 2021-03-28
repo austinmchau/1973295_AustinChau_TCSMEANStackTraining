@@ -12,7 +12,7 @@ export class QuizContainerComponent implements OnInit {
 	quizList: string[] = [];
 
 	demoQuiz?: IQuiz;
-	testQuestion?: IQuizQuestion;
+	questions?: IQuizQuestion[];
 
 	constructor(private quizApi: QuizApiService) { }
 
@@ -20,14 +20,11 @@ export class QuizContainerComponent implements OnInit {
 		this.quizApi.getAvailableQuizzes().subscribe(quizzes => this.quizList = quizzes);
 		this.quizApi.getQuiz("demo-quiz").subscribe(quiz => {
 			this.demoQuiz = quiz;
-			const questions = quiz.payload?.questions;
-			if (Array.isArray(questions)) {
-				const question = questions[0] as IQuizQuestion;
-				if (question !== undefined) {
-					this.testQuestion = question;
-					console.log("TestQuestion: ", this.testQuestion);
-				}
-			}
+			this.questions = (() => {
+				const questions = quiz?.payload?.questions;
+				if (!Array.isArray(questions)) { console.error("invalid quiz questions."); return []; }
+				return questions.filter(question => (question as IQuizQuestion) !== undefined);
+			})();
 		});
 	}
 
