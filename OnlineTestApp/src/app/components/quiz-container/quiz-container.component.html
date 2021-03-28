@@ -1,1 +1,7 @@
 <p>quiz-container works!</p>
+<p>List of quizzes: {{quizList}}</p>
+<ul *ngFor="let quiz of quizList">
+	<li><a [routerLink]=[quiz]>{{quiz}}</a></li>
+</ul>
+
+<app-quiz-question [question]="testQuestion"></app-quiz-question>
