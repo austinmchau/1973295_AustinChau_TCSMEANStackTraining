@@ -1,10 +1,6 @@
-<p>quiz-container works!</p>
-<p>List of quizzes: {{quizList}}</p>
-<ul *ngFor="let quiz of quizList">
-	<li><a [routerLink]=[quiz]>{{quiz}}</a></li>
-</ul>
+<p>Quiz: {{currentQuizName}}</p>
 
-<form  (submit)="onSubmit()">
+<form #questionForm="ngForm" (ngSubmit)="onSubmit(questionForm)">
 	<div *ngFor="let question of questions">
 		<app-quiz-question [question]="question"></app-quiz-question>
 	</div>

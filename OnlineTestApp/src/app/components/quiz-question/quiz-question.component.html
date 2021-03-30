@@ -1,8 +1,8 @@
 <div>
 	<h2>{{questionText}}</h2>
-	<form>
+	<form ngModelGroup="question">
 		<div *ngFor="let choice of choices" class="form-check">
-			<input class="form-check-input" type="radio" [name]="quizQuestion?.id" [id]="choice.id">
+			<input type="radio" class="form-check-input" [name]="questionId" [value]="choice.id" [id]="quizQuestion?.id" ngModel>
 			<label class="form-check-label" [for]="choice.id">{{choice.text}}</label>
 		</div>
 	</form>

@@ -7,20 +7,22 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { QuizContainerComponent } from './components/quiz-container/quiz-container.component';
 import { HttpClientModule } from '@angular/common/http';
 import { QuizQuestionComponent } from './components/quiz-question/quiz-question.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    QuizContainerComponent,
+	declarations: [
+		AppComponent,
+		QuizContainerComponent,
 		QuizQuestionComponent,
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    NgbModule,
-    HttpClientModule,
-  ],
-  providers: [],
-  bootstrap: [AppComponent]
+	],
+	imports: [
+		BrowserModule,
+		AppRoutingModule,
+		NgbModule,
+		HttpClientModule,
+		FormsModule,
+	],
+	providers: [],
+	bootstrap: [AppComponent]
 })
 export class AppModule { }

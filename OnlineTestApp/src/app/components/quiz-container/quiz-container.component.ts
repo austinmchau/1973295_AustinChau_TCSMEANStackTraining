@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Form, FormGroup, NgForm } from '@angular/forms';
 import { IQuiz, IQuizQuestion, isQuizQuestion } from 'src/app/models/quiz';
 import { QuizApiService } from 'src/app/services/quiz-api.service';
 
@@ -11,15 +12,18 @@ export class QuizContainerComponent implements OnInit {
 
 	quizList: string[] = [];
 
-	demoQuiz?: IQuiz;
+	currentQuiz?: IQuiz;
 	questions?: IQuizQuestion[];
+
+	get currentQuizName() { return this.currentQuiz?.metadata.name ?? ""; }
+
 
 	constructor(private quizApi: QuizApiService) { }
 
 	ngOnInit(): void {
 		this.quizApi.getAvailableQuizzes().subscribe(quizzes => this.quizList = quizzes);
 		this.quizApi.getQuiz("demo-quiz").subscribe(quiz => {
-			this.demoQuiz = quiz;
+			this.currentQuiz = quiz;
 			this.questions = (() => {
 				const questions = quiz?.payload?.questions;
 				if (!Array.isArray(questions)) { console.error("invalid quiz questions."); return []; }
@@ -28,7 +32,8 @@ export class QuizContainerComponent implements OnInit {
 		});
 	}
 
-	onSubmit() {
-		console.log("Form submitted: ");
+	onSubmit(questionForm: NgForm) {
+		const results = questionForm.value;
+		console.log("Form submitted: ", results);
 	}
 }
