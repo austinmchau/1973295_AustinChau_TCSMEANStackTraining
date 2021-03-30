@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { IQuiz, IQuizQuestion } from 'src/app/models/quiz';
+import { IQuiz, IQuizQuestion, isQuizQuestion } from 'src/app/models/quiz';
 import { QuizApiService } from 'src/app/services/quiz-api.service';
 
 @Component({
@@ -23,9 +23,12 @@ export class QuizContainerComponent implements OnInit {
 			this.questions = (() => {
 				const questions = quiz?.payload?.questions;
 				if (!Array.isArray(questions)) { console.error("invalid quiz questions."); return []; }
-				return questions.filter(question => (question as IQuizQuestion) !== undefined);
+				return questions.filter(question => isQuizQuestion(question));
 			})();
 		});
 	}
 
+	onSubmit() {
+		console.log("Form submitted: ");
+	}
 }

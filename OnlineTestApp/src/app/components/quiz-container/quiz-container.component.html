@@ -4,6 +4,9 @@
 	<li><a [routerLink]=[quiz]>{{quiz}}</a></li>
 </ul>
 
-<div *ngFor="let question of questions">
-	<app-quiz-question [question]="question"></app-quiz-question>
-</div>
+<form  (submit)="onSubmit()">
+	<div *ngFor="let question of questions">
+		<app-quiz-question [question]="question"></app-quiz-question>
+	</div>
+	<button type="submit">Submit</button>
+</form>
