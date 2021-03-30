@@ -27,11 +27,107 @@
                     {"id": 2, "text": "Texas"},
                     {"id": 3, "text": "Quebec"} 
                 ]
+            },
+            {
+                "id": "2",
+                "type": "mc",
+                "q": "What is 2 + 2?",
+                "c": [
+                    {"id": 0, "text": "3"},
+                    {"id": 1, "text": "4"},
+                    {"id": 2, "text": "5"},
+                    {"id": 3, "text": "6"} 
+                ]
+            },
+            {
+                "id": "3",
+                "type": "mc",
+                "q": "What's the capitol of Germany?",
+                "c": [
+                    {"id": 0, "text": "Hamburg"},
+                    {"id": 1, "text": "Munich"},
+                    {"id": 2, "text": "Frankfurt"},
+                    {"id": 3, "text": "Berlin"} 
+                ]
+            },
+            {
+                "id": "4",
+                "type": "mc",
+                "q": "Which of the following software is not owned by Apple Inc.?",
+                "c": [
+                    {"id": 0, "text": "iOS"},
+                    {"id": 1, "text": "iWork"},
+                    {"id": 2, "text": "WhatsApp"},
+                    {"id": 3, "text": "Safari"} 
+                ]
+            },
+            {
+                "id": "5",
+                "type": "mc",
+                "q": "Which of the following is not a website?",
+                "c": [
+                    {"id": 0, "text": "Twitch"},
+                    {"id": 1, "text": "GMail"},
+                    {"id": 2, "text": "YouTube"},
+                    {"id": 3, "text": "Google Chrome"} 
+                ]
+            },
+            {
+                "id": "6",
+                "type": "mc",
+                "q": "Which of the following is a Compiled Language",
+                "c": [
+                    {"id": 0, "text": "C"},
+                    {"id": 1, "text": "Python"},
+                    {"id": 2, "text": "JavaScript"},
+                    {"id": 3, "text": "Java"} 
+                ]
+            },
+            {
+                "id": "7",
+                "type": "mc",
+                "q": "Which of the following is not a unit for measuring temperature?",
+                "c": [
+                    {"id": 0, "text": "Kelvin"},
+                    {"id": 1, "text": "Celsius"},
+                    {"id": 2, "text": "Fahrenheit"},
+                    {"id": 3, "text": "Joule"} 
+                ]
+            },
+            {
+                "id": "8",
+                "type": "mc",
+                "q": "Which of the following is not a car manufacturer?",
+                "c": [
+                    {"id": 0, "text": "Volvo"},
+                    {"id": 1, "text": "Ford"},
+                    {"id": 2, "text": "Tesla"},
+                    {"id": 3, "text": "Watts"} 
+                ]
+            },
+            {
+                "id": "9",
+                "type": "mc",
+                "q": "Which of the following is the powerhouse of the cell",
+                "c": [
+                    {"id": 0, "text": "Nucleus"},
+                    {"id": 1, "text": "Mitochondria"},
+                    {"id": 2, "text": "Rough Endoplasmic Reticulum"},
+                    {"id": 3, "text": "Cytoplasm"} 
+                ]
             }
         ],
         "answers": [
             {"id": "0", "a": {"id": 1}},
-            {"id": "1", "a": {"id": 3}}
+            {"id": "1", "a": {"id": 3}},
+            {"id": "2", "a": {"id": 1}},
+            {"id": "3", "a": {"id": 3}},
+            {"id": "4", "a": {"id": 2}},
+            {"id": "5", "a": {"id": 3}},
+            {"id": "6", "a": {"id": 0}},
+            {"id": "7", "a": {"id": 3}},
+            {"id": "8", "a": {"id": 3}},
+            {"id": "9", "a": {"id": 1}}
         ]
     }
 }
