@@ -38,9 +38,14 @@ export class QuizContainerComponent implements OnInit {
 	}
 
 	onSubmit() {
-		const results = this.quizForm.value;
-		console.log("Form submitted: ", results, this.quizForm.valid);
 
-		this.quizForm.markAllAsTouched();
+		if (this.quizForm.invalid) {
+			console.log("Form invalid: ", this.quizForm.valid);
+			this.quizForm.markAllAsTouched();
+		} else {
+			const results = this.quizForm.value;
+			console.log("Form submitted: ", results, this.quizForm.valid);
+		}
+
 	}
 }

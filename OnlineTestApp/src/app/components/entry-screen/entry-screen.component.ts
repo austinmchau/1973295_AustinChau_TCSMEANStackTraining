@@ -32,13 +32,12 @@ export class EntryScreenComponent implements OnInit {
 	}
 
 	onSubmit() {
-
-		if (this.form.valid) {
+		if (this.form.invalid) {
+			this.form.markAllAsTouched();
+		} else {
 			const quiz = this.form.get("quiz") as FormControl;
 			const quizName = quiz.value;
 			this.router.navigate(["quiz", quizName])
-		} else {
-			this.form.markAllAsTouched();
 		}
 	}
 
