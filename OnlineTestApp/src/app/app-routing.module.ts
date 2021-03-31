@@ -6,7 +6,7 @@ import { QuizContainerComponent } from './components/quiz-container/quiz-contain
 
 const routes: Routes = [
 	{ path: "entry", component: EntryScreenComponent },
-	{ path: "quiz", component: QuizContainerComponent },
+	{ path: "quiz/:quiz-name", component: QuizContainerComponent },
 	{ path: "", redirectTo: "entry", pathMatch: "full" },  // TODO: remove redirect once splash screen is ready
 ];
 

@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Form, FormArray, FormBuilder, FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { flatMap, mergeMap } from 'rxjs/operators';
 import { IQuiz, IQuizQuestion, isQuizQuestion } from 'src/app/models/quiz';
 import { QuizApiService } from 'src/app/services/quiz-api.service';
 
@@ -17,17 +19,22 @@ export class QuizContainerComponent implements OnInit {
 	questions?: IQuizQuestion[];
 	get currentQuizName() { return this.currentQuiz?.metadata.name ?? ""; }
 
-	constructor(private quizApi: QuizApiService, private fb: FormBuilder) { }
+	constructor(private quizApi: QuizApiService, private route: ActivatedRoute) { }
 
 	ngOnInit(): void {
-		this.quizApi.getQuiz("demo-quiz").subscribe(quiz => {
-			this.currentQuiz = quiz;
-			this.questions = (() => {
-				const questions = quiz?.payload?.questions;
-				if (!Array.isArray(questions)) { console.error("invalid quiz questions."); return []; }
-				return questions.filter(question => isQuizQuestion(question));
-			})();
-		})
+		this.route.params
+			.pipe(mergeMap(params => {
+				const quizName = params['quiz-name'];
+				return this.quizApi.getQuiz(quizName);
+			}))
+			.subscribe(quiz => {
+				this.currentQuiz = quiz;
+				this.questions = (() => {
+					const questions = quiz?.payload?.questions;
+					if (!Array.isArray(questions)) { console.error("invalid quiz questions."); return []; }
+					return questions.filter(question => isQuizQuestion(question));
+				})();
+			})
 	}
 
 	onSubmit() {

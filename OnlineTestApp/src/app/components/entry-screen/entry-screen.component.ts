@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { IQuiz } from 'src/app/models/quiz';
 import { QuizApiService } from 'src/app/services/quiz-api.service';
 
@@ -22,7 +23,7 @@ export class EntryScreenComponent implements OnInit {
 	});
 	availableQuizzes?: string[];
 
-	constructor(private quizApi: QuizApiService) { }
+	constructor(private quizApi: QuizApiService, private router: Router) { }
 
 	ngOnInit(): void {
 		this.quizApi.getAvailableQuizzes().subscribe(quizzes => {
@@ -34,6 +35,11 @@ export class EntryScreenComponent implements OnInit {
 	onSubmit() {
 		const quiz = this.form.get("quiz") as FormControl;
 		console.log("quiz: ", quiz.value, quiz.valid);
+
+		if (quiz.valid) {
+			const quizName = quiz.value;
+			this.router.navigate(["quiz", quizName])
+		}
 	}
 
 }
