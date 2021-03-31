@@ -28,17 +28,17 @@ export class EntryScreenComponent implements OnInit {
 	ngOnInit(): void {
 		this.quizApi.getAvailableQuizzes().subscribe(quizzes => {
 			this.availableQuizzes = quizzes;
-			console.log("available: ", this.availableQuizzes);
 		});
 	}
 
 	onSubmit() {
-		const quiz = this.form.get("quiz") as FormControl;
-		console.log("quiz: ", quiz.value, quiz.valid);
 
-		if (quiz.valid) {
+		if (this.form.valid) {
+			const quiz = this.form.get("quiz") as FormControl;
 			const quizName = quiz.value;
 			this.router.navigate(["quiz", quizName])
+		} else {
+			this.form.markAllAsTouched();
 		}
 	}
 
