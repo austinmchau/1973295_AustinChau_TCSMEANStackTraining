@@ -1,8 +1,11 @@
 <p>Quiz: {{currentQuizName}}</p>
 
-<form #questionForm="ngForm" (ngSubmit)="onSubmit(questionForm)">
+<form [formGroup]="quizForm" (ngSubmit)="onSubmit()">
 	<div *ngFor="let question of questions">
-		<app-quiz-question [question]="question"></app-quiz-question>
+		<app-quiz-question [quizForm]="quizForm" [question]="question"></app-quiz-question>
 	</div>
+	<!-- <div *ngFor="let questionForm of questionForms.controls; let i = index">
+		<app-quiz-question [questionForm]="questionForm" [question]="questions ? questions[i] : undefined"></app-quiz-question>
+	</div> -->
 	<button type="submit">Submit</button>
 </form>

@@ -1,9 +1,10 @@
 <div>
 	<h2>{{questionText}}</h2>
-	<form ngModelGroup="question">
+	<form [formGroup]="quizForm">
 		<div *ngFor="let choice of choices" class="form-check">
-			<input type="radio" class="form-check-input" [name]="questionId" [value]="choice.id" [id]="quizQuestion?.id" ngModel>
-			<label class="form-check-label" [for]="choice.id">{{choice.text}}</label>
+			<input type="radio" class="form-check-input" [name]="questionId" [value]="choice.id" [id]="choiceId(choice.id)" [formControlName]="questionId">
+			<label class="form-check-label" [for]="choiceId(choice.id)">{{choice.text}}</label>
 		</div>
 	</form>
+	<div *ngIf="questionFormControl.touched && questionFormControl.hasError('required')" class="invalid-feedback d-block">Missing answer!</div>
 </div>

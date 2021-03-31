@@ -7,7 +7,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { QuizContainerComponent } from './components/quiz-container/quiz-container.component';
 import { HttpClientModule } from '@angular/common/http';
 import { QuizQuestionComponent } from './components/quiz-question/quiz-question.component';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
 	declarations: [
@@ -20,7 +20,7 @@ import { FormsModule } from '@angular/forms';
 		AppRoutingModule,
 		NgbModule,
 		HttpClientModule,
-		FormsModule,
+		ReactiveFormsModule,
 	],
 	providers: [],
 	bootstrap: [AppComponent]
