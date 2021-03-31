@@ -8,12 +8,14 @@ import { QuizContainerComponent } from './components/quiz-container/quiz-contain
 import { HttpClientModule } from '@angular/common/http';
 import { QuizQuestionComponent } from './components/quiz-question/quiz-question.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { EntryScreenComponent } from './components/entry-screen/entry-screen.component';
 
 @NgModule({
 	declarations: [
 		AppComponent,
 		QuizContainerComponent,
 		QuizQuestionComponent,
+		EntryScreenComponent,
 	],
 	imports: [
 		BrowserModule,

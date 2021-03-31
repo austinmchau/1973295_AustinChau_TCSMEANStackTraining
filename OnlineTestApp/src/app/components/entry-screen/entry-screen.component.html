@@ -1,0 +1,8 @@
+<form [formGroup]="form" (submit)="onSubmit()">
+	<label for="quizzes">Available Quizzes</label>
+	<select name="quizzes" id="quizzes" *ngFor="let quizName of availableQuizzes" formControlName="quiz" class="custom-select">
+		<option value="placeholder" selected>Quizzes...</option>
+		<option [ngValue]="quizName">{{quizName}}</option>
+	</select>
+	<button type="submit" class="btn btn-primary">Start</button>
+</form>
