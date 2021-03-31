@@ -10,11 +10,8 @@ import { QuizApiService } from 'src/app/services/quiz-api.service';
 })
 export class QuizContainerComponent implements OnInit {
 
-	quizForm = new FormGroup({
-		// questions: new FormArray([]),
-	});
+	quizForm = new FormGroup({});
 	get questionForms() { return this.quizForm.get("questions") as FormArray; }
-	// get questionForms() { return (this.quizForm.controls.questions as FormArray).controls as FormGroup[]; }
 
 	currentQuiz?: IQuiz;
 	questions?: IQuizQuestion[];
@@ -23,15 +20,6 @@ export class QuizContainerComponent implements OnInit {
 	constructor(private quizApi: QuizApiService, private fb: FormBuilder) { }
 
 	ngOnInit(): void {
-		// this.quizApi.getAvailableQuizzes().subscribe(quizzes => this.quizList = quizzes);
-		// this.quizApi.getQuiz("demo-quiz").subscribe(quiz => {
-		// 	this.currentQuiz = quiz;
-		// 	this.questions = (() => {
-		// 		const questions = quiz?.payload?.questions;
-		// 		if (!Array.isArray(questions)) { console.error("invalid quiz questions."); return []; }
-		// 		return questions.filter(question => isQuizQuestion(question));
-		// 	})();
-		// });
 		this.quizApi.getQuiz("demo-quiz").subscribe(quiz => {
 			this.currentQuiz = quiz;
 			this.questions = (() => {
@@ -39,10 +27,6 @@ export class QuizContainerComponent implements OnInit {
 				if (!Array.isArray(questions)) { console.error("invalid quiz questions."); return []; }
 				return questions.filter(question => isQuizQuestion(question));
 			})();
-
-			// this.quizForm = new FormGroup({
-			// 	"questions": new FormArray(this.questions?.map(question => new FormGroup({}))),
-			// });
 		})
 	}
 
