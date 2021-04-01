@@ -1,13 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
-import { Observable, throwError } from 'rxjs';
+import { EMPTY, forkJoin, Observable } from 'rxjs';
 import { map } from "rxjs/operators";
-import { IQuiz } from '../models/quiz';
+import { IQuiz, IQuizAnswer, IQuizQuestion, IQuizResponses, MCAnswer, MCScore } from '../models/quiz';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class QuizApiService {
+
+	private quizResponses = new Map<string, IQuizResponses>();
 
 	constructor(private http: HttpClient) { }
 
@@ -30,5 +32,46 @@ export class QuizApiService {
 				if (obj === undefined) { throw new Error(`error loading quiz, obj undefined: ${quizName}.`); }
 				return quiz;
 			}));
+	}
+
+	submit(response: IQuizResponses): Observable<never> {
+		this.quizResponses.set(response.quizName, response);
+		return EMPTY;
+	}
+
+	private score(questions: IQuizQuestion[], answers: IQuizAnswer[], response: IQuizResponses): MCScore[] {
+		const answerMap = new Map(answers.map(answer => [answer.id, answer.a]));
+		const responseMap = new Map(Object.entries(response.response));
+		return questions.map(question => {
+			const answer = answerMap.get(question.id);
+			const resp = responseMap.get(question.id);
+			if (answer === undefined || typeof resp !== 'number') throw new Error(`Broken resp: ${resp}`)
+
+			const correct = (answer as MCAnswer).a.id === resp;
+
+			return {
+				question: question,
+				answer: answer as MCAnswer,
+				response: resp,
+				correct: correct,
+			};
+		})
+	}
+
+	getScore(responseId: string): Observable<{ score: MCScore[], response: IQuizResponses, quiz: IQuiz }> {
+		const response$ = new Observable<IQuizResponses>(observer => {
+			const response = this.quizResponses.get(responseId);
+			if (!response) { observer.error(new Error(`responseId "${responseId}" does not have an entry.`)); return; }
+			observer.next(response);
+			observer.complete();
+			return { unsubscribe() { } };
+		})
+		const quiz$ = this.getQuiz(responseId);
+
+		return forkJoin([response$, quiz$]).pipe(map(([response, quiz]) => ({
+			score: this.score(quiz.payload.questions, quiz.payload.answers, response),
+			response: response,
+			quiz: quiz,
+		})))
 	}
 }

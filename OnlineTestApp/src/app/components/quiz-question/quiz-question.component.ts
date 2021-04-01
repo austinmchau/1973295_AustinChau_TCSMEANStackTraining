@@ -16,7 +16,7 @@ export class QuizQuestionComponent implements OnInit {
 	get questionId(): string { return this.quizQuestion?.id; }
 	get choices(): { id: number, text: string }[] {
 		const question = this.quizQuestion as MCQuestion;
-		if (question === undefined) { return []; }
+		if (question.type !== "mc") { return []; }
 		return question.c;
 	}
 	get questionFormControl() { return this.quizForm.get(this.questionId) as FormControl; }
