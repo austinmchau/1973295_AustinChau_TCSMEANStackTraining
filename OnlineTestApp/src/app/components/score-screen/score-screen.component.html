@@ -1,5 +1,6 @@
 <div class="mb-5">
 	<p class="display-4">You got: {{grade('score')}} / {{grade('total')}} !</p>
+	<p class="h6 text-info">Passing grade is {{grade('passing')}}.</p>
 	<p class="h4 text-success" *ngIf="hasPassed; else failedText">Congratulations, you passed!</p>
 	<ng-template #failedText>
 		<p class="h5 text-danger">Sorry, please try again.</p>

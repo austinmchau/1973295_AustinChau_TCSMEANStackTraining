@@ -49,7 +49,7 @@ export class QuizContainerComponent implements OnInit {
 				quizName: this.quizName,
 				response: results,
 			}
-			console.log("Form submitted: ", results, this.quizForm.valid);
+			console.log("Form submitted: ", submission, this.quizForm.valid);
 			this.quizApi.submit(submission).subscribe(responseId => {
 				console.log("responseId: ", responseId);
 				this.router.navigate(['result', responseId]);

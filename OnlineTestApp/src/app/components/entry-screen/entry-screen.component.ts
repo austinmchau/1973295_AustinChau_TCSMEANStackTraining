@@ -37,6 +37,7 @@ export class EntryScreenComponent implements OnInit {
 		} else {
 			const quiz = this.form.get("quiz") as FormControl;
 			const quizName = quiz.value;
+			console.log("quizName: ", quizName)
 			this.router.navigate(["quiz", quizName])
 		}
 	}

@@ -1,4 +1,4 @@
-<p>Quiz: {{quizNameLiteral}}</p>
+<p class="display-4">Quiz: <span class="badge bg-info">{{quizNameLiteral}}</span></p>
 
 <form [formGroup]="quizForm" (ngSubmit)="onSubmit()">
 	<div *ngFor="let question of questions">
