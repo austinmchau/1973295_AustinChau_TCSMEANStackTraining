@@ -1,0 +1,10 @@
+<div class="form-group">
+	<h4>{{questionText}}</h4>
+	<form [formGroup]="quizForm">
+		<div *ngFor="let choice of choices" class="form-check form-check-inline">
+			<input type="radio" class="form-check-input" [name]="questionId" [value]="choice.id" [id]="choiceId(choice.id)" [formControlName]="questionId">
+			<label class="form-check-label" [for]="choiceId(choice.id)">{{choice.text}}</label>
+		</div>
+	</form>
+	<div *ngIf="questionFormControl.touched && questionFormControl.hasError('required')" class="invalid-feedback d-block">Missing answer!</div>
+</div>

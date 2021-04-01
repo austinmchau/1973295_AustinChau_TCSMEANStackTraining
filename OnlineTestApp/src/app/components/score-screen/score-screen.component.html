@@ -1,0 +1,16 @@
+<div class="mb-5">
+	<p class="display-4">You got: {{grade('score')}} / {{grade('total')}} !</p>
+	<p class="h6 text-info">Passing grade is {{grade('passing')}}.</p>
+	<p class="h4 text-success" *ngIf="hasPassed; else failedText">Congratulations, you passed!</p>
+	<ng-template #failedText>
+		<p class="h5 text-danger">Sorry, please try again.</p>
+	</ng-template>
+	<a routerLink="/" class="btn btn-primary">Return</a>
+</div>
+
+<h4 *ngIf="incorrectResponses?.length">Incorrect Responses:</h4>
+<div *ngFor="let response of incorrectResponses" class="form-group mb-5">
+	<h4>{{response.question.q}}</h4>
+	<p class="text-danger">Your answer: <span class="lead"><span class="badge bg-danger text-white">{{chosenAnswer(response, 'user')?.text}}</span></span></p>
+	<p class="text-success">Correct answer: <span class="lead"><span class="badge bg-success text-white">{{chosenAnswer(response, 'answer')?.text}}</span></span></p>
+</div>

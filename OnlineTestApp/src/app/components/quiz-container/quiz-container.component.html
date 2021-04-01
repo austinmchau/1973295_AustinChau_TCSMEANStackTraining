@@ -1,0 +1,10 @@
+<p class="display-4">Quiz: <span class="badge bg-info">{{quizNameLiteral}}</span></p>
+
+<form [formGroup]="quizForm" (ngSubmit)="onSubmit()" class="mb-10">
+	<div *ngFor="let question of questions">
+		<div class="mb-5">
+			<app-quiz-question [quizForm]="quizForm" [question]="question"></app-quiz-question>
+		</div>
+	</div>
+	<button type="submit" class="btn btn-primary">Submit</button>
+</form>
