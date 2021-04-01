@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Form, FormArray, FormBuilder, FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { flatMap, mergeMap } from 'rxjs/operators';
-import { IQuiz, IQuizQuestion, isQuizQuestion } from 'src/app/models/quiz';
+import { IQuiz, IQuizQuestion, IQuizResponses, isQuizQuestion } from 'src/app/models/quiz';
 import { QuizApiService } from 'src/app/services/quiz-api.service';
 
 @Component({
@@ -19,7 +19,7 @@ export class QuizContainerComponent implements OnInit {
 	questions?: IQuizQuestion[];
 	get currentQuizName() { return this.currentQuiz?.metadata.name ?? ""; }
 
-	constructor(private quizApi: QuizApiService, private route: ActivatedRoute) { }
+	constructor(private quizApi: QuizApiService, private router: Router, private route: ActivatedRoute) { }
 
 	ngOnInit(): void {
 		this.route.params
@@ -43,8 +43,12 @@ export class QuizContainerComponent implements OnInit {
 			console.log("Form invalid: ", this.quizForm.valid);
 			this.quizForm.markAllAsTouched();
 		} else {
-			const results = this.quizForm.value;
+			const results = this.quizForm.value as IQuizResponses;
 			console.log("Form submitted: ", results, this.quizForm.valid);
+			this.quizApi.submit(results).subscribe(responseId => {
+				console.log("responseId: ", responseId);
+				this.router.navigate(['result', responseId]);
+			})
 		}
 
 	}

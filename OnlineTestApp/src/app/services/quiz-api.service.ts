@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
-import { EMPTY, forkJoin, Observable } from 'rxjs';
+import { forkJoin, Observable, of } from 'rxjs';
 import { map } from "rxjs/operators";
 import { IQuiz, IQuizAnswer, IQuizQuestion, IQuizResponses, MCAnswer, MCScore } from '../models/quiz';
 
@@ -34,9 +34,10 @@ export class QuizApiService {
 			}));
 	}
 
-	submit(response: IQuizResponses): Observable<never> {
-		this.quizResponses.set(response.quizName, response);
-		return EMPTY;
+	submit(response: IQuizResponses): Observable<string> {
+		const responseId = [...Array(32)].map(i=>(~~(Math.random()*36)).toString(36)).join('');
+		this.quizResponses.set(responseId, response);
+		return of(responseId);
 	}
 
 	private score(questions: IQuizQuestion[], answers: IQuizAnswer[], response: IQuizResponses): MCScore[] {
