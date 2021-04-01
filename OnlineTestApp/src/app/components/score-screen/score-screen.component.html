@@ -1,1 +1,7 @@
-<p>score-screen works!</p>
+<p class="display-4">You got: {{grade.score}} / {{grade.total}} !</p>
+
+<div *ngFor="let response of incorrectResponses" class="form-group mb-5">
+	<h4>{{response.question.q}}</h4>
+	<p class="text-danger">Your answer: <span class="lead"><span class="badge bg-danger text-white">{{chosenAnswer(response, 'user')?.text}}</span></span></p>
+	<p class="text-success">Correct answer: <span class="lead"><span class="badge bg-success text-white">{{chosenAnswer(response, 'answer')?.text}}</span></span></p>
+</div>

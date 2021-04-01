@@ -10,6 +10,7 @@ import { QuizQuestionComponent } from './components/quiz-question/quiz-question.
 import { ReactiveFormsModule } from '@angular/forms';
 import { EntryScreenComponent } from './components/entry-screen/entry-screen.component';
 import { ScoreScreenComponent } from './components/score-screen/score-screen.component';
+import { QuizBackendService } from './services/quiz-backend.service';
 
 @NgModule({
 	declarations: [
@@ -26,7 +27,7 @@ import { ScoreScreenComponent } from './components/score-screen/score-screen.com
 		HttpClientModule,
 		ReactiveFormsModule,
 	],
-	providers: [],
+	providers: [QuizBackendService],
 	bootstrap: [AppComponent]
 })
 export class AppModule { }

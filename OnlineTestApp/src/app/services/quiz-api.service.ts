@@ -1,17 +1,16 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
-import { forkJoin, Observable, of } from 'rxjs';
+import { combineLatest, forkJoin, Observable, of } from 'rxjs';
 import { map, mergeMap } from "rxjs/operators";
 import { IQuiz, IQuizAnswer, IQuizQuestion, IQuizResponses, MCAnswer, MCScore } from '../models/quiz';
+import { QuizBackendService } from './quiz-backend.service';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class QuizApiService {
 
-	private quizResponses = new Map<string, IQuizResponses>();
-
-	constructor(private http: HttpClient) { }
+	constructor(private http: HttpClient, private quizBackend: QuizBackendService) { }
 
 	getAvailableQuizzes(): Observable<string[]> {
 		return this.http.get("/assets/quiz-questions/quiz-manifest.json")
@@ -36,12 +35,14 @@ export class QuizApiService {
 
 	submit(response: IQuizResponses): Observable<string> {
 		const responseId = [...Array(32)].map(i => (~~(Math.random() * 36)).toString(36)).join('');
-		this.quizResponses.set(responseId, response);
-		return of(responseId);
+		return this.quizBackend.store(responseId, response)
+			.pipe(
+				map(() => responseId)
+			)
 	}
 
 	private score(questions: IQuizQuestion[], answers: IQuizAnswer[], response: IQuizResponses): MCScore[] {
-		const answerMap = new Map(answers.map(answer => [answer.id, answer.a]));
+		const answerMap = new Map(answers.map(answer => [answer.id, answer]));
 		const responseMap = new Map(Object.entries(response.response));
 		return questions.map(question => {
 			const answer = answerMap.get(question.id);
@@ -60,21 +61,20 @@ export class QuizApiService {
 	}
 
 	getScore(responseId: string): Observable<{ score: MCScore[], response: IQuizResponses, quiz: IQuiz }> {
-		const response$ = new Observable<IQuizResponses>(observer => {
-			const response = this.quizResponses.get(responseId);
-			if (!response) { observer.error(new Error(`responseId "${responseId}" does not have an entry.`)); return; }
-			console.log("response: ", response)
-			observer.next(response);
-			// observer.complete();
-			return { unsubscribe() { } };
-		})
+		const response$ = this.quizBackend.retrieve(responseId).pipe(
+			map(response => {
+				if (!response) { throw new Error(`responseId "${responseId}" does not have an entry.`); }
+				console.log("response: ", response)
+				return response;
+			})
+		)
 
 		const quiz$ = response$.pipe(mergeMap(response => {
 			console.log("Response2: ", response)
 			return this.getQuiz(response.quizName);
 		}));
 
-		return forkJoin([response$, quiz$]).pipe(map(([response, quiz]) => ({
+		return combineLatest([response$, quiz$]).pipe(map(([response, quiz]) => ({
 			score: this.score(quiz.payload.questions, quiz.payload.answers, response),
 			response: response,
 			quiz: quiz,

@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { mergeMap } from 'rxjs/operators';
-import { IQuiz, IQuizResponses, MCScore } from 'src/app/models/quiz';
+import { IQuiz, IQuizResponses, MCQuestion, MCScore } from 'src/app/models/quiz';
 import { QuizApiService } from 'src/app/services/quiz-api.service';
 
 @Component({
-  selector: 'app-score-screen',
-  templateUrl: './score-screen.component.html',
-  styleUrls: ['./score-screen.component.css']
+	selector: 'app-score-screen',
+	templateUrl: './score-screen.component.html',
+	styleUrls: ['./score-screen.component.css']
 })
 export class ScoreScreenComponent implements OnInit {
 
@@ -15,9 +15,28 @@ export class ScoreScreenComponent implements OnInit {
 	userResponse!: IQuizResponses;
 	quiz!: IQuiz;
 
-  constructor(private quizApi: QuizApiService, private route: ActivatedRoute) { }
+	get grade() {
+		return {
+			score: this.scores.reduce((acc, { correct }) => acc + (correct ? 1 : 0), 0),
+			total: this.scores.length,
+		};
+	}
 
-  ngOnInit(): void {
+	get incorrectResponses() { return this.scores.filter(score => !score.correct) }
+
+	chosenAnswer(score: MCScore, whose: "user" | "answer") {
+		const choiceId = (() => {
+			switch (whose) {
+				case 'user': return score.response;
+				case 'answer': return score.answer.a.id;
+			}
+		})()
+		return (score.question as MCQuestion).c.find(c => c.id === choiceId);
+	}
+
+	constructor(private quizApi: QuizApiService, private route: ActivatedRoute) { }
+
+	ngOnInit(): void {
 		this.route.params
 			.pipe(mergeMap(params => {
 				const responseId = params['responseId'];
@@ -29,6 +48,6 @@ export class ScoreScreenComponent implements OnInit {
 				this.quiz = response.quiz;
 				console.log(response);
 			})
-  }
+	}
 
 }
