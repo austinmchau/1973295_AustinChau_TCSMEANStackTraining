@@ -2,6 +2,7 @@
     "metadata": {
         "name": "Demo Quiz",
         "quizName": "demo-quiz",
+        "passing-grade": 8,
         "version": "1.0",
         "question_version": "1.0"
     },

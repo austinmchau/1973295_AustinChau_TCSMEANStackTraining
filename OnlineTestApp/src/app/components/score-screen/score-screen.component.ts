@@ -11,18 +11,20 @@ import { QuizApiService } from 'src/app/services/quiz-api.service';
 })
 export class ScoreScreenComponent implements OnInit {
 
-	scores!: MCScore[];
-	userResponse!: IQuizResponses;
-	quiz!: IQuiz;
+	scores?: MCScore[];
+	userResponse?: IQuizResponses;
+	quiz?: IQuiz;
 
-	get grade() {
-		return {
-			score: this.scores.reduce((acc, { correct }) => acc + (correct ? 1 : 0), 0),
-			total: this.scores.length,
+	get incorrectResponses() { return this.scores?.filter(score => !score.correct) }
+	get hasPassed() { return this.grade('score') >= this.grade('passing'); }
+
+	grade(which: "score" | "total" | "passing") {
+		switch (which) {
+			case 'score': return this.scores?.reduce((acc, { correct }) => acc + (correct ? 1 : 0), 0);
+			case 'total': return this.scores?.length;
+			case 'passing': return this.quiz?.metadata["passing-grade"];
 		};
 	}
-
-	get incorrectResponses() { return this.scores.filter(score => !score.correct) }
 
 	chosenAnswer(score: MCScore, whose: "user" | "answer") {
 		const choiceId = (() => {
