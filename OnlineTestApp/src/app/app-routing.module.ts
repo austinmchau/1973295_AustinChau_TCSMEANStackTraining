@@ -8,7 +8,7 @@ import { ScoreScreenComponent } from './components/score-screen/score-screen.com
 const routes: Routes = [
 	{ path: "entry", component: EntryScreenComponent },
 	{ path: "quiz/:quiz-name", component: QuizContainerComponent },
-	{ path: "result/:quiz-name", component: ScoreScreenComponent },
+	{ path: "result/:responseId", component: ScoreScreenComponent },
 	{ path: "", redirectTo: "entry", pathMatch: "full" },  // TODO: remove redirect once splash screen is ready
 ];
 

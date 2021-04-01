@@ -17,7 +17,8 @@ export class QuizContainerComponent implements OnInit {
 
 	currentQuiz?: IQuiz;
 	questions?: IQuizQuestion[];
-	get currentQuizName() { return this.currentQuiz?.metadata.name ?? ""; }
+	get quizName() { return this.currentQuiz?.metadata?.quizName ?? ""; }
+	get quizNameLiteral() { return this.currentQuiz?.metadata?.name ?? ""; }
 
 	constructor(private quizApi: QuizApiService, private router: Router, private route: ActivatedRoute) { }
 
@@ -43,9 +44,13 @@ export class QuizContainerComponent implements OnInit {
 			console.log("Form invalid: ", this.quizForm.valid);
 			this.quizForm.markAllAsTouched();
 		} else {
-			const results = this.quizForm.value as IQuizResponses;
+			const results = this.quizForm.value;
+			const submission: IQuizResponses = {
+				quizName: this.quizName,
+				response: results,
+			}
 			console.log("Form submitted: ", results, this.quizForm.valid);
-			this.quizApi.submit(results).subscribe(responseId => {
+			this.quizApi.submit(submission).subscribe(responseId => {
 				console.log("responseId: ", responseId);
 				this.router.navigate(['result', responseId]);
 			})

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { forkJoin, Observable, of } from 'rxjs';
-import { map } from "rxjs/operators";
+import { map, mergeMap } from "rxjs/operators";
 import { IQuiz, IQuizAnswer, IQuizQuestion, IQuizResponses, MCAnswer, MCScore } from '../models/quiz';
 
 @Injectable({
@@ -35,7 +35,7 @@ export class QuizApiService {
 	}
 
 	submit(response: IQuizResponses): Observable<string> {
-		const responseId = [...Array(32)].map(i=>(~~(Math.random()*36)).toString(36)).join('');
+		const responseId = [...Array(32)].map(i => (~~(Math.random() * 36)).toString(36)).join('');
 		this.quizResponses.set(responseId, response);
 		return of(responseId);
 	}
@@ -63,11 +63,16 @@ export class QuizApiService {
 		const response$ = new Observable<IQuizResponses>(observer => {
 			const response = this.quizResponses.get(responseId);
 			if (!response) { observer.error(new Error(`responseId "${responseId}" does not have an entry.`)); return; }
+			console.log("response: ", response)
 			observer.next(response);
-			observer.complete();
+			// observer.complete();
 			return { unsubscribe() { } };
 		})
-		const quiz$ = this.getQuiz(responseId);
+
+		const quiz$ = response$.pipe(mergeMap(response => {
+			console.log("Response2: ", response)
+			return this.getQuiz(response.quizName);
+		}));
 
 		return forkJoin([response$, quiz$]).pipe(map(([response, quiz]) => ({
 			score: this.score(quiz.payload.questions, quiz.payload.answers, response),

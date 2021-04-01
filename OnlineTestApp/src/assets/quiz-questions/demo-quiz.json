@@ -1,6 +1,7 @@
 {
     "metadata": {
         "name": "Demo Quiz",
+        "quizName": "demo-quiz",
         "version": "1.0",
         "question_version": "1.0"
     },
