@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { EMPTY, NEVER, Observable, of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { IQuizResponses } from '../models/quiz';
 
 @Injectable()

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Form, FormArray, FormBuilder, FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
+import { FormArray, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { flatMap, mergeMap } from 'rxjs/operators';
+import { mergeMap } from 'rxjs/operators';
 import { IQuiz, IQuizQuestion, IQuizResponses, isQuizQuestion } from 'src/app/models/quiz';
 import { QuizApiService } from 'src/app/services/quiz-api.service';
 
@@ -41,7 +41,6 @@ export class QuizContainerComponent implements OnInit {
 	onSubmit() {
 
 		if (this.quizForm.invalid) {
-			console.log("Form invalid: ", this.quizForm.valid);
 			this.quizForm.markAllAsTouched();
 		} else {
 			const results = this.quizForm.value;
@@ -49,9 +48,7 @@ export class QuizContainerComponent implements OnInit {
 				quizName: this.quizName,
 				response: results,
 			}
-			console.log("Form submitted: ", submission, this.quizForm.valid);
 			this.quizApi.submit(submission).subscribe(responseId => {
-				console.log("responseId: ", responseId);
 				this.router.navigate(['result', responseId]);
 			})
 		}

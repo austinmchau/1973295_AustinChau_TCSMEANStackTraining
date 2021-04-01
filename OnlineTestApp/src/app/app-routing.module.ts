@@ -9,7 +9,7 @@ const routes: Routes = [
 	{ path: "entry", component: EntryScreenComponent },
 	{ path: "quiz/:quiz-name", component: QuizContainerComponent },
 	{ path: "result/:responseId", component: ScoreScreenComponent },
-	{ path: "", redirectTo: "entry", pathMatch: "full" },  // TODO: remove redirect once splash screen is ready
+	{ path: "", redirectTo: "entry", pathMatch: "full" },
 ];
 
 @NgModule({

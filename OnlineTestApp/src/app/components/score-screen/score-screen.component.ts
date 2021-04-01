@@ -48,7 +48,6 @@ export class ScoreScreenComponent implements OnInit {
 				this.scores = response.score;
 				this.userResponse = response.response;
 				this.quiz = response.quiz;
-				console.log(response);
 			})
 	}
 

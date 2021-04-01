@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { IQuiz } from 'src/app/models/quiz';
 import { QuizApiService } from 'src/app/services/quiz-api.service';
 
 function validQuizSelection(selection: RegExp): ValidatorFn {
@@ -37,7 +36,6 @@ export class EntryScreenComponent implements OnInit {
 		} else {
 			const quiz = this.form.get("quiz") as FormControl;
 			const quizName = quiz.value;
-			console.log("quizName: ", quizName)
 			this.router.navigate(["quiz", quizName])
 		}
 	}

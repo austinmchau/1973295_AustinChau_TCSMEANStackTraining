@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
-import { combineLatest, forkJoin, Observable, of } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import { map, mergeMap } from "rxjs/operators";
 import { IQuiz, IQuizAnswer, IQuizQuestion, IQuizResponses, MCAnswer, MCScore } from '../models/quiz';
 import { QuizBackendService } from './quiz-backend.service';
@@ -64,13 +64,11 @@ export class QuizApiService {
 		const response$ = this.quizBackend.retrieve(responseId).pipe(
 			map(response => {
 				if (!response) { throw new Error(`responseId "${responseId}" does not have an entry.`); }
-				console.log("response: ", response)
 				return response;
 			})
 		)
 
 		const quiz$ = response$.pipe(mergeMap(response => {
-			console.log("Response2: ", response)
 			return this.getQuiz(response.quizName);
 		}));
 
