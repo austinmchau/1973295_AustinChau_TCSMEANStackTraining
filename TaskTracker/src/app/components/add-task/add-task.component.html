@@ -1,1 +1,24 @@
-<p>add-task works!</p>
+<mat-card>
+	<mat-card-header>
+		<mat-card-title>Add New Task</mat-card-title>
+	</mat-card-header>
+	<mat-card-content>
+		<form action="">
+			<mat-form-field appearance="fill" hintLabel="Employee ID">
+				<mat-label>ID</mat-label>
+				<input matInput placeholder="1234567">
+				<mat-error *ngIf="id.invalid">Invalid input</mat-error>
+			</mat-form-field>
+			<mat-form-field appearance="fill" hintLabel="Employee Name">
+				<mat-label>Name</mat-label>
+				<input matInput placeholder="Jamie Doe">
+				<mat-error *ngIf="task.invalid">Invalid input</mat-error>
+			</mat-form-field>
+			<mat-form-field appearance="fill" hintLabel="Description">
+				<mat-label>Name</mat-label>
+				<textarea matInput placeholder="Do task"></textarea>
+				<mat-error *ngIf="task.invalid">Invalid input</mat-error>
+			</mat-form-field>
+		</form>
+	</mat-card-content>
+</mat-card>

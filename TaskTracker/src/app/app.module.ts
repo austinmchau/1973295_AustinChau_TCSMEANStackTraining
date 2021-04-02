@@ -5,8 +5,12 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field'
+import { MatInputModule } from '@angular/material/input';
 import { AddTaskComponent } from './components/add-task/add-task.component';
 import { TaskViewComponent } from './components/task-view/task-view.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -18,7 +22,11 @@ import { TaskViewComponent } from './components/task-view/task-view.component';
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+		ReactiveFormsModule,
 		MatToolbarModule,
+		MatCardModule,
+		MatFormFieldModule,
+		MatInputModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
