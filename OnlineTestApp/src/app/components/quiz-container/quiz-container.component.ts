@@ -5,6 +5,9 @@ import { mergeMap } from 'rxjs/operators';
 import { IQuiz, IQuizQuestion, IQuizResponses, isQuizQuestion } from 'src/app/models/quiz';
 import { QuizApiService } from 'src/app/services/quiz-api.service';
 
+/**
+ * The component for the quiz.
+ */
 @Component({
 	selector: 'app-quiz-container',
 	templateUrl: './quiz-container.component.html',
@@ -12,12 +15,30 @@ import { QuizApiService } from 'src/app/services/quiz-api.service';
 })
 export class QuizContainerComponent implements OnInit {
 
+	/**
+	 * FormGroup for the whole quiz.
+	 */
 	quizForm = new FormGroup({});
+	/**
+	 * Get the FormArray holding the questions from the quizForm.
+	 */
 	get questionForms() { return this.quizForm.get("questions") as FormArray; }
 
+	/**
+	 * Storing the current quiz object.
+	 */
 	currentQuiz?: IQuiz;
+	/**
+	 * Storing the list of questions for the current quiz.
+	 */
 	questions?: IQuizQuestion[];
+	/**
+	 * Return the current quiz's name.
+	 */
 	get quizName() { return this.currentQuiz?.metadata?.quizName ?? ""; }
+	/**
+	 * return the current quiz's human readable name.
+	 */
 	get quizNameLiteral() { return this.currentQuiz?.metadata?.name ?? ""; }
 
 	constructor(private quizApi: QuizApiService, private router: Router, private route: ActivatedRoute) { }
