@@ -1,24 +1,40 @@
-<mat-card>
+<mat-card class="addTaskCard">
 	<mat-card-header>
 		<mat-card-title>Add New Task</mat-card-title>
 	</mat-card-header>
 	<mat-card-content>
-		<form action="">
-			<mat-form-field appearance="fill" hintLabel="Employee ID">
-				<mat-label>ID</mat-label>
-				<input matInput placeholder="1234567">
-				<mat-error *ngIf="id.invalid">Invalid input</mat-error>
-			</mat-form-field>
-			<mat-form-field appearance="fill" hintLabel="Employee Name">
-				<mat-label>Name</mat-label>
-				<input matInput placeholder="Jamie Doe">
-				<mat-error *ngIf="task.invalid">Invalid input</mat-error>
-			</mat-form-field>
-			<mat-form-field appearance="fill" hintLabel="Description">
-				<mat-label>Name</mat-label>
-				<textarea matInput placeholder="Do task"></textarea>
-				<mat-error *ngIf="task.invalid">Invalid input</mat-error>
-			</mat-form-field>
+		<form action="" id="addTaskForm" class="addTaskForm">
+			<p>
+				<mat-form-field appearance="fill" hintLabel="Employee ID">
+					<mat-label>ID</mat-label>
+					<input matInput placeholder="1234567">
+					<mat-error *ngIf="id.invalid">Invalid input</mat-error>
+				</mat-form-field>
+				<mat-form-field appearance="fill" hintLabel="Employee Name">
+					<mat-label>Name</mat-label>
+					<input matInput placeholder="Jamie Doe">
+					<mat-error *ngIf="task.invalid">Invalid input</mat-error>
+				</mat-form-field>
+				<mat-form-field appearance="fill" hintLabel="Task Due Date">
+					<mat-label>Deadline</mat-label>
+					<input matInput [matDatepicker]="picker">
+					<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+					<mat-datepicker #picker></mat-datepicker>
+					<mat-error *ngIf="task.invalid">Invalid input</mat-error>
+				</mat-form-field>
+			</p>
+
+			<p>
+				<mat-form-field appearance="fill" hintLabel="Task Description">
+					<mat-label>Name</mat-label>
+					<textarea matInput cdkTextareaAutosize cdkAutosizeMinRows="3" cdkAutosizeMaxRows="5" placeholder="Do task"></textarea>
+					<mat-error *ngIf="task.invalid">Invalid input</mat-error>
+				</mat-form-field>
+			</p>
 		</form>
 	</mat-card-content>
+	<mat-card-actions>
+		<button type="submit" form="addTaskForm" mat-raised-button color="primary">Add</button>
+		<button type="reset" form="addTaskForm" mat-raised-button color="warn">Reset</button>
+	</mat-card-actions>
 </mat-card>

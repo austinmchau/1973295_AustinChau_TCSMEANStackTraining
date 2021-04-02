@@ -8,6 +8,9 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatInputModule } from '@angular/material/input';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatButtonModule } from '@angular/material/button';
 import { AddTaskComponent } from './components/add-task/add-task.component';
 import { TaskViewComponent } from './components/task-view/task-view.component';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -27,6 +30,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 		MatCardModule,
 		MatFormFieldModule,
 		MatInputModule,
+		MatDatepickerModule,
+		MatNativeDateModule,
+		MatButtonModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
