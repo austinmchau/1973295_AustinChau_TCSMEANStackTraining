@@ -11,7 +11,7 @@ import { TasksApiService } from 'src/app/services/tasks-api.service';
 export class AddTaskComponent implements OnInit {
 
 	form = this.fb.group({
-		id: ['', [Validators.required]],
+		id: ['', [Validators.required, Validators.pattern(/\d{7}/)]],
 		name: ['', [Validators.required]],
 		task: ['', [Validators.required]],
 		deadline: ['', [Validators.required]],
