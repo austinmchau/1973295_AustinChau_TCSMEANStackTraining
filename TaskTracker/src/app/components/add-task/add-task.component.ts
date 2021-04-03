@@ -3,6 +3,9 @@ import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { isTask, Task } from 'src/app/models/tasks';
 import { TasksApiService } from 'src/app/services/tasks-api.service';
 
+/**
+ * Component for the add task card + form
+ */
 @Component({
 	selector: 'app-add-task',
 	templateUrl: './add-task.component.html',
@@ -10,12 +13,17 @@ import { TasksApiService } from 'src/app/services/tasks-api.service';
 })
 export class AddTaskComponent implements OnInit {
 
+	/**
+	 * The formGroup for add-task
+	 */
 	form = this.fb.group({
 		id: ['', [Validators.required, Validators.pattern(/\d{7}/)]],
 		name: ['', [Validators.required]],
 		task: ['', [Validators.required]],
 		deadline: ['', [Validators.required]],
 	})
+	
+	// Convenience getters
 
 	get id() { return this.form.get("id") as FormControl; }
 	get name() { return this.form.get("name") as FormControl; }
@@ -24,21 +32,21 @@ export class AddTaskComponent implements OnInit {
 
 	constructor(private fb: FormBuilder, private taskApi: TasksApiService) { }
 
-	ngOnInit(): void {
-	}
+	ngOnInit(): void { }
 
+	/**
+	 * On adding task
+	 * @param e clickEvent
+	 */
 	onSubmit(e: Event) {
-		console.log("values: ", this.form.value, this.form.valid);
-
 		e.stopPropagation();
 		e.preventDefault();
 
 		if (this.form.valid) {
 			const { id, name, task, deadline } = this.form.value;
+			// Transforming the form value to the task object keys
 			const taskObj: Task = { empId: id, name: name, task: task, deadline: deadline };
-			console.log("posting: ", taskObj);
 			this.taskApi.addTask(taskObj).subscribe(result => {
-				console.log("result: ", result);
 			}, error => {
 				console.error("error: ", error);
 			})

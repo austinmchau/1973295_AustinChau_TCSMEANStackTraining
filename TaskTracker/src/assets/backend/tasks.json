@@ -1,4 +1,18 @@
 {
   "tasks": [
+    {
+      "empId": "1234567",
+      "name": "Jamie Doe",
+      "task": "Do task",
+      "deadline": "2021-03-01T08:00:00.000Z",
+      "id": 1
+    },
+    {
+      "empId": "1113333",
+      "name": "John Doe",
+      "task": "Do more task",
+      "deadline": "2021-04-01T07:00:00.000Z",
+      "id": 2
+    }
   ]
 }
