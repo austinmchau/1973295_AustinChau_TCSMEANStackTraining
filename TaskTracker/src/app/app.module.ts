@@ -15,6 +15,8 @@ import { MatTableModule } from '@angular/material/table';
 import { AddTaskComponent } from './components/add-task/add-task.component';
 import { TaskViewComponent } from './components/task-view/task-view.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [
@@ -35,6 +37,12 @@ import { ReactiveFormsModule } from '@angular/forms';
 		MatNativeDateModule,
 		MatButtonModule,
 		MatTableModule,
+  ServiceWorkerModule.register('ngsw-worker.js', {
+    enabled: environment.production,
+    // Register the ServiceWorker as soon as the app is stable
+    // or after 30 seconds (whichever comes first).
+    registrationStrategy: 'registerWhenStable:30000'
+  }),
   ],
   providers: [],
   bootstrap: [AppComponent]
