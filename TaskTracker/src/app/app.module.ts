@@ -17,17 +17,19 @@ import { TaskViewComponent } from './components/task-view/task-view.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    AddTaskComponent,
-    TaskViewComponent
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
+	declarations: [
+		AppComponent,
+		AddTaskComponent,
+		TaskViewComponent
+	],
+	imports: [
+		BrowserModule,
+		AppRoutingModule,
+		BrowserAnimationsModule,
+		HttpClientModule,
 		ReactiveFormsModule,
 		MatToolbarModule,
 		MatCardModule,
@@ -37,14 +39,14 @@ import { environment } from '../environments/environment';
 		MatNativeDateModule,
 		MatButtonModule,
 		MatTableModule,
-  ServiceWorkerModule.register('ngsw-worker.js', {
-    enabled: environment.production,
-    // Register the ServiceWorker as soon as the app is stable
-    // or after 30 seconds (whichever comes first).
-    registrationStrategy: 'registerWhenStable:30000'
-  }),
-  ],
-  providers: [],
-  bootstrap: [AppComponent]
+		ServiceWorkerModule.register('ngsw-worker.js', {
+			enabled: environment.production,
+			// Register the ServiceWorker as soon as the app is stable
+			// or after 30 seconds (whichever comes first).
+			registrationStrategy: 'registerWhenStable:30000'
+		}),
+	],
+	providers: [],
+	bootstrap: [AppComponent]
 })
 export class AppModule { }
