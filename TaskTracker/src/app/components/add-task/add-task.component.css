@@ -1,0 +1,11 @@
+/* mat-card.addTaskCard {
+    max-width: 300px;
+} */
+
+mat-card.addTaskCard mat-card-actions {
+    text-align: right;
+}
+
+form.addTaskForm mat-form-field {
+    display: inherit;
+}
