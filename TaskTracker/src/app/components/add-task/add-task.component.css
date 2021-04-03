@@ -1,6 +1,6 @@
-mat-card.addTaskCard {
-    max-width: 400px;
-}
+/* mat-card.addTaskCard {
+    max-width: 300px;
+} */
 
 mat-card.addTaskCard mat-card-actions {
     text-align: right;

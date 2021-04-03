@@ -1,0 +1,7 @@
+/* mat-card {
+    max-width: 400px;
+} */
+
+mat-card table {
+    width: 100%;
+}

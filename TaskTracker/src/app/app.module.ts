@@ -11,6 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatTableModule } from '@angular/material/table';
 import { AddTaskComponent } from './components/add-task/add-task.component';
 import { TaskViewComponent } from './components/task-view/task-view.component';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -33,6 +34,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 		MatDatepickerModule,
 		MatNativeDateModule,
 		MatButtonModule,
+		MatTableModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
