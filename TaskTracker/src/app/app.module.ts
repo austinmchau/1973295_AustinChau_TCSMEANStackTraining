@@ -14,7 +14,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
 import { AddTaskComponent } from './components/add-task/add-task.component';
 import { TaskViewComponent } from './components/task-view/task-view.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { HttpClientModule } from '@angular/common/http';
@@ -30,6 +30,7 @@ import { HttpClientModule } from '@angular/common/http';
 		AppRoutingModule,
 		BrowserAnimationsModule,
 		HttpClientModule,
+		FormsModule,
 		ReactiveFormsModule,
 		MatToolbarModule,
 		MatCardModule,

@@ -27,9 +27,11 @@ export class AddTaskComponent implements OnInit {
 	ngOnInit(): void {
 	}
 
-	onSubmit() {
+	onSubmit(e: Event) {
 		console.log("values: ", this.form.value, this.form.valid);
 
+		e.stopPropagation();
+		e.preventDefault();
 
 		if (this.form.valid) {
 			const { id, name, task, deadline } = this.form.value;
@@ -41,6 +43,7 @@ export class AddTaskComponent implements OnInit {
 				console.error("error: ", error);
 			})
 		}
+
 	}
 
 }

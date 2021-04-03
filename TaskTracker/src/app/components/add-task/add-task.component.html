@@ -3,7 +3,7 @@
 		<mat-card-title>Add New Task</mat-card-title>
 	</mat-card-header>
 	<mat-card-content>
-		<form id="addTaskForm" class="addTaskForm" [formGroup]="form" (submit)="onSubmit()">
+		<form id="addTaskForm" class="addTaskForm" [formGroup]="form">
 			<p>
 				<mat-form-field appearance="fill" hintLabel="Employee ID">
 					<mat-label>ID</mat-label>
@@ -34,7 +34,7 @@
 		</form>
 	</mat-card-content>
 	<mat-card-actions>
-		<button type="submit" form="addTaskForm" mat-raised-button color="primary">Add</button>
+		<button (click)="onSubmit($event)" mat-raised-button color="primary">Add</button>
 		<button type="reset" form="addTaskForm" mat-raised-button color="warn">Reset</button>
 	</mat-card-actions>
 </mat-card>
