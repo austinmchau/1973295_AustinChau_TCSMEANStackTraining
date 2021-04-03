@@ -28,7 +28,9 @@ export class TaskViewComponent implements OnInit {
 	ngOnInit(): void {
 		this.taskApi.getAllTasks().subscribe(result => {
 			console.log(result);
-			this.tasksDataSource = result.map(task => displayTask(task));
+			this.tasksDataSource = result
+				.sort((a, b) => b.deadline.getTime() - a.deadline.getTime())
+				.map(task => displayTask(task));
 		}, error => {
 			console.error(error);
 		})

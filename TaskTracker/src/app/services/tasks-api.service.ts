@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { isTask, Task } from '../models/tasks';
+import { asTask, isTask, Task } from '../models/tasks';
 import { map } from 'rxjs/operators';
 
 @Injectable({
@@ -19,10 +19,12 @@ export class TasksApiService {
 	getAllTasks() {
 		return this.http.get(this.hostname + "tasks")
 		.pipe(map(result => {
-			if (!(Array.isArray(result) && (result as Object[]).every(item => isTask(item)))) {
-				throw new Error(`Invalid tasks results: ${result}`);
+			if (Array.isArray(result)) {
+				return (result as Object[])
+					.map(item => asTask(item))
+					.reduce<Task[]>((prev, item) => item !== null ? [...prev, item] : prev, []);
 			}
-			return result as Task[];
+			throw new Error(`Invalid tasks results: ${JSON.stringify(result)}`);
 		}));
 	}
 

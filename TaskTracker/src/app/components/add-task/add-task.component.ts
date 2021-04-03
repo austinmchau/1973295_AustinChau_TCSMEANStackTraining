@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { isTask, Task } from 'src/app/models/tasks';
+import { TasksApiService } from 'src/app/services/tasks-api.service';
 
 @Component({
-  selector: 'app-add-task',
-  templateUrl: './add-task.component.html',
-  styleUrls: ['./add-task.component.css']
+	selector: 'app-add-task',
+	templateUrl: './add-task.component.html',
+	styleUrls: ['./add-task.component.css']
 })
 export class AddTaskComponent implements OnInit {
 
@@ -20,9 +22,25 @@ export class AddTaskComponent implements OnInit {
 	get task() { return this.form.get("task") as FormControl; }
 	get deadline() { return this.form.get("deadline") as FormControl; }
 
-  constructor(private fb: FormBuilder) { }
+	constructor(private fb: FormBuilder, private taskApi: TasksApiService) { }
 
-  ngOnInit(): void {
-  }
+	ngOnInit(): void {
+	}
+
+	onSubmit() {
+		console.log("values: ", this.form.value, this.form.valid);
+
+
+		if (this.form.valid) {
+			const { id, name, task, deadline } = this.form.value;
+			const taskObj: Task = { empId: id, name: name, task: task, deadline: deadline };
+			console.log("posting: ", taskObj);
+			this.taskApi.addTask(taskObj).subscribe(result => {
+				console.log("result: ", result);
+			}, error => {
+				console.error("error: ", error);
+			})
+		}
+	}
 
 }

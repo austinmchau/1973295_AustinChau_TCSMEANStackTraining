@@ -3,21 +3,21 @@
 		<mat-card-title>Add New Task</mat-card-title>
 	</mat-card-header>
 	<mat-card-content>
-		<form action="" id="addTaskForm" class="addTaskForm">
+		<form id="addTaskForm" class="addTaskForm" [formGroup]="form" (submit)="onSubmit()">
 			<p>
 				<mat-form-field appearance="fill" hintLabel="Employee ID">
 					<mat-label>ID</mat-label>
-					<input matInput placeholder="1234567">
+					<input matInput formControlName="id" placeholder="1234567">
 					<mat-error *ngIf="id.invalid">Invalid input</mat-error>
 				</mat-form-field>
 				<mat-form-field appearance="fill" hintLabel="Employee Name">
 					<mat-label>Name</mat-label>
-					<input matInput placeholder="Jamie Doe">
+					<input matInput formControlName="name" placeholder="Jamie Doe">
 					<mat-error *ngIf="task.invalid">Invalid input</mat-error>
 				</mat-form-field>
 				<mat-form-field appearance="fill" hintLabel="Task Due Date">
 					<mat-label>Deadline</mat-label>
-					<input matInput [matDatepicker]="picker">
+					<input matInput formControlName="deadline" [matDatepicker]="picker">
 					<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
 					<mat-datepicker #picker></mat-datepicker>
 					<mat-error *ngIf="task.invalid">Invalid input</mat-error>
@@ -27,7 +27,7 @@
 			<p>
 				<mat-form-field appearance="fill" hintLabel="Task Description">
 					<mat-label>Name</mat-label>
-					<textarea matInput cdkTextareaAutosize cdkAutosizeMinRows="3" cdkAutosizeMaxRows="5" placeholder="Do task"></textarea>
+					<textarea matInput formControlName="task" cdkTextareaAutosize cdkAutosizeMinRows="3" cdkAutosizeMaxRows="5" placeholder="Do task"></textarea>
 					<mat-error *ngIf="task.invalid">Invalid input</mat-error>
 				</mat-form-field>
 			</p>
