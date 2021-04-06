@@ -13,6 +13,7 @@ async function askQuestions(questions, interface) {
         output: process.stdout,
     });
 
+    // A promise factory to generate a promise for every question prompt
     const prompt = (acc, question, varName) => new Promise((resolve) => {
         ioInterface.question(`${question}: `, (response) => {
             resolve({ ...acc, [varName]: response });
@@ -22,11 +23,11 @@ async function askQuestions(questions, interface) {
     debugger;
 
     return questions
-        .reduce(
+        .reduce(  // map the questions into promise while building a result object
             async (response, [q, v]) => prompt(await response, q, v),
             Promise.resolve({})
         )
-        .finally(() => {
+        .finally(() => {  // always close the readline
             ioInterface.close();
         });
 }
@@ -40,6 +41,10 @@ async function logToJson(entry) {
     const fs = require("fs").promises;
     const FILEPATH = "log.json";
 
+    /**
+     * a promise function that reads existing entries from the log
+     * @returns A promise with the existing entries
+     */
     const readFile = async () => {
         try {
             const buffer = await fs.readFile(FILEPATH);
@@ -52,15 +57,22 @@ async function logToJson(entry) {
             throw error;
         }
     }
+    /**
+     * a promise function that validates the user input object and add timestamp
+     * @returns the user input with timestamp
+     */
     const validateEntry = async () => {
         if (!(typeof entry === "object" && entry !== null)) { throw new Error(`Invalid entry: ${entry}`); }
         return { ...entry, timestamp: new Date() };
     }
 
+    // execute both promises
     const [fromFile, newEntry] = await Promise.all([readFile(), validateEntry(),]);
+    // append and create new log
     const payload = [...fromFile, newEntry];
     const data = JSON.stringify(payload, null, 2);
     debugger;
+    // write to log
     return await fs.writeFile(FILEPATH, data);
 }
 
@@ -69,6 +81,7 @@ async function logToJson(entry) {
  */
 async function logUserRecords() {
 
+    // ask for user input
     const userInput = await askQuestions([
         ["Enter your first name", "firstName"],
         ["Enter your last name", "lastName"],
@@ -79,6 +92,7 @@ async function logUserRecords() {
     debugger;
 
     try {
+        // save to json log
         await logToJson(userInput);
     } catch (error) {
         console.error(`Sorry, something wrong happened. Please try again. Error: ${error}`);
@@ -86,7 +100,7 @@ async function logUserRecords() {
 }
 
 /**
- * Exports
+ * Exports. Functions that would be needed for this file to be reusable.
  */
 
 exports.askQuestions = askQuestions;
