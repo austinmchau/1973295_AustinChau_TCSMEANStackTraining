@@ -1,0 +1,23 @@
+[
+  {
+    "firstName": "A",
+    "lastName": "A",
+    "gender": "A",
+    "email": "a",
+    "timestamp": "2021-04-06T06:47:51.122Z"
+  },
+  {
+    "firstName": "d",
+    "lastName": "d",
+    "gender": "d",
+    "email": "d",
+    "timestamp": "2021-04-06T06:49:49.455Z"
+  },
+  {
+    "firstName": "Austin",
+    "lastName": "Chau",
+    "gender": "M",
+    "email": "a@a.com",
+    "timestamp": "2021-04-06T06:51:54.475Z"
+  }
+]

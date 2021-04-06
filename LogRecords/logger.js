@@ -19,6 +19,8 @@ function askQuestions(questions, interface) {
         })
     });
 
+    debugger;
+
     return questions
         .reduce(
             async (response, [q, v]) => prompt(await response, q, v),
@@ -29,8 +31,49 @@ function askQuestions(questions, interface) {
         });
 }
 
-function logToFile(entry) {
+function logToJson(entry) {
+    const fs = require("fs").promises;
+    const FILEPATH = "log.json";
 
+    // if (!(typeof entry === "object" && entry !== null)) {
+    //     throw new Error(`Invalid entry: ${entry}`);
+    // }
+
+    // try {
+    //     let prevData = await fs.readFile(FILEPATH);
+    //     prevData = prevData.toString();
+    // }
+
+
+    return Promise.all([
+
+        fs.readFile(FILEPATH)
+            .then(buffer => buffer.toString())
+            .then(JSON.parse)
+            .then(value => (
+                Array.isArray(value) ?
+                    value :
+                    (() => { throw new Error(`Invalid store: ${value}`) })()
+            ))
+            .catch(error => {
+                if (error.code === 'ENOENT' || error instanceof SyntaxError) { return []; }
+                throw error;
+            })
+        ,
+        new Promise((resolve, reject) => {
+            (typeof entry === "object" && entry !== null) ?
+                resolve(entry) :
+                reject(new Error(`Invalid entry: ${entry}`))
+        })
+            .then(value => ({ ...value, timestamp: new Date() }))
+        ,
+    ])
+        .then(([fromFile, newEntry]) => [...fromFile, newEntry])
+        .then(obj => JSON.stringify(obj, null, 2))
+        .then(data => {
+            debugger;
+            return fs.writeFile(FILEPATH, data);
+        })
 }
 
 /**
@@ -38,16 +81,18 @@ function logToFile(entry) {
  */
 function logUserRecords() {
 
-    const userInput = askQuestions([
+    askQuestions([
         ["Enter your first name", "firstName"],
         ["Enter your last name", "lastName"],
         ["Enter your gender", "gender"],
         ["Enter your email", "email"],
     ])
         .then((result) => {
+            debugger;
             console.log(`Thanks, ${result.firstName}, your input is saved.`);
             return result;
         })
+        .then(logToJson)
         .catch(error => {
             console.error(`Sorry, something wrong happened. Please try again. Error: ${error}`);
         })
@@ -58,7 +103,7 @@ function logUserRecords() {
  */
 
 exports.askQuestions = askQuestions;
-exports.logToFile = logToFile;
+exports.logToFile = logToJson;
 exports.logUserRecords = logUserRecords;
 
 
@@ -67,4 +112,12 @@ exports.logUserRecords = logUserRecords;
  */
 if (typeof require !== 'undefined' && require.main === module) {
     logUserRecords();
+    // logToFile("Hewwo")
+    //     .then(() => console.log("OK!"));
+
+    // const fs = require("fs");
+    // fs.readFile("info.txt", (error, data) => {
+    //     const text = data.toString();
+    //     console.log(text);
+    // })
 }
