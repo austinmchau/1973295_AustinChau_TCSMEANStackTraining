@@ -4,7 +4,7 @@
  * @param {readline.ReadLineOptions | undefined} interface optional configuration for the readline.
  * @returns {Promise<{[varName: string]: string}>} A Promise that returns and object of {[variable name from questions]: response}
  */
-function askQuestions(questions, interface) {
+async function askQuestions(questions, interface) {
 
     const readline = require("readline");
 
@@ -31,71 +31,58 @@ function askQuestions(questions, interface) {
         });
 }
 
-function logToJson(entry) {
+/**
+ * Function to append-log the user entry into the json file. 
+ * @param {[varName: string]: string} entry user's input to be stored. 
+ * @returns Promise that's fulfilled after a successful write.
+ */
+async function logToJson(entry) {
     const fs = require("fs").promises;
     const FILEPATH = "log.json";
 
-    // if (!(typeof entry === "object" && entry !== null)) {
-    //     throw new Error(`Invalid entry: ${entry}`);
-    // }
+    const readFile = async () => {
+        try {
+            const buffer = await fs.readFile(FILEPATH);
+            const bufferString = buffer.toString();
+            const prevEntries = JSON.parse(bufferString);
+            if (!(Array.isArray(prevEntries))) { throw new Error(`Invalid store: ${prevEntries}`); }
+            return prevEntries;
+        } catch (error) {
+            if (error.code === 'ENOENT' || error instanceof SyntaxError) { return []; }
+            throw error;
+        }
+    }
+    const validateEntry = async () => {
+        if (!(typeof entry === "object" && entry !== null)) { throw new Error(`Invalid entry: ${entry}`); }
+        return { ...entry, timestamp: new Date() };
+    }
 
-    // try {
-    //     let prevData = await fs.readFile(FILEPATH);
-    //     prevData = prevData.toString();
-    // }
-
-
-    return Promise.all([
-
-        fs.readFile(FILEPATH)
-            .then(buffer => buffer.toString())
-            .then(JSON.parse)
-            .then(value => (
-                Array.isArray(value) ?
-                    value :
-                    (() => { throw new Error(`Invalid store: ${value}`) })()
-            ))
-            .catch(error => {
-                if (error.code === 'ENOENT' || error instanceof SyntaxError) { return []; }
-                throw error;
-            })
-        ,
-        new Promise((resolve, reject) => {
-            (typeof entry === "object" && entry !== null) ?
-                resolve(entry) :
-                reject(new Error(`Invalid entry: ${entry}`))
-        })
-            .then(value => ({ ...value, timestamp: new Date() }))
-        ,
-    ])
-        .then(([fromFile, newEntry]) => [...fromFile, newEntry])
-        .then(obj => JSON.stringify(obj, null, 2))
-        .then(data => {
-            debugger;
-            return fs.writeFile(FILEPATH, data);
-        })
+    const [fromFile, newEntry] = await Promise.all([readFile(), validateEntry(),]);
+    const payload = [...fromFile, newEntry];
+    const data = JSON.stringify(payload, null, 2);
+    debugger;
+    return await fs.writeFile(FILEPATH, data);
 }
 
 /**
  * Function that asks for user info and save to json file.
  */
-function logUserRecords() {
+async function logUserRecords() {
 
-    askQuestions([
+    const userInput = await askQuestions([
         ["Enter your first name", "firstName"],
         ["Enter your last name", "lastName"],
         ["Enter your gender", "gender"],
         ["Enter your email", "email"],
     ])
-        .then((result) => {
-            debugger;
-            console.log(`Thanks, ${result.firstName}, your input is saved.`);
-            return result;
-        })
-        .then(logToJson)
-        .catch(error => {
-            console.error(`Sorry, something wrong happened. Please try again. Error: ${error}`);
-        })
+    console.log(`Thanks, ${userInput.firstName}, your input is saved.`);
+    debugger;
+
+    try {
+        await logToJson(userInput);
+    } catch (error) {
+        console.error(`Sorry, something wrong happened. Please try again. Error: ${error}`);
+    }
 }
 
 /**
@@ -112,12 +99,4 @@ exports.logUserRecords = logUserRecords;
  */
 if (typeof require !== 'undefined' && require.main === module) {
     logUserRecords();
-    // logToFile("Hewwo")
-    //     .then(() => console.log("OK!"));
-
-    // const fs = require("fs");
-    // fs.readFile("info.txt", (error, data) => {
-    //     const text = data.toString();
-    //     console.log(text);
-    // })
 }

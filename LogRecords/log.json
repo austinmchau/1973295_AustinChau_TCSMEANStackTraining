@@ -1,23 +1,16 @@
 [
   {
-    "firstName": "A",
-    "lastName": "A",
-    "gender": "A",
-    "email": "a",
-    "timestamp": "2021-04-06T06:47:51.122Z"
-  },
-  {
-    "firstName": "d",
-    "lastName": "d",
-    "gender": "d",
-    "email": "d",
-    "timestamp": "2021-04-06T06:49:49.455Z"
-  },
-  {
-    "firstName": "Austin",
-    "lastName": "Chau",
+    "firstName": "Tim",
+    "lastName": "Burton",
     "gender": "M",
     "email": "a@a.com",
-    "timestamp": "2021-04-06T06:51:54.475Z"
+    "timestamp": "2021-04-06T07:50:15.085Z"
+  },
+  {
+    "firstName": "Jamie",
+    "lastName": "Doe",
+    "gender": "F",
+    "email": "b@b.com",
+    "timestamp": "2021-04-06T07:50:47.622Z"
   }
 ]
