@@ -207,7 +207,7 @@ let server = http.createServer(async (req, res) => {
 
 	if (pathInfo === "/") {
 		res.setHeader("content-type", "text/html");
-		Promise.all([
+		await Promise.all([
 			addTaskHtml(),
 			deleteTaskHtml(),
 			listTaskBtnHtml({ onClick: listTaskBtnHtmlOnClick }),
@@ -218,42 +218,52 @@ let server = http.createServer(async (req, res) => {
 			.catch(console.error)
 			.finally(() => res.end());
 	} else {
-		const data = url.parse(req.url, true).query;
 
+		const redirectHtml = (path, ms) => `
+			<script>
+				setTimeout(function () {
+					window.location = "${path}";
+				}, ${ms})
+			</script>	
+		`
 		/**@typedef {{onSubmit: Promise<void>, catchError: (error: Error) => {}}} Route */
-
 		/** @type {Route[]} */
 		const routes = {
 			"/addTask": {
 				"onSubmit": addTaskOnSubmit,
 				"catchError": (error) => {
-					if (error instanceof DuplicateTask) { console.log("Duplicate task! ", error); }
-					console.error(error);
-				}
+					if (error instanceof DuplicateTask) {
+						res.write(`Duplicate task! (Task ID: "${error.taskId}") Try again.`)
+						res.write(redirectHtml("/", 2000));
+					} else {
+						throw error;
+					}
+				},
 			},
 			"/deleteTask": {
 				"onSubmit": deleteTaskOnSubmit,
 				"catchError": (error) => {
-					if (error instanceof NoMatch) { alert(`Task (id=${error.taskId}) does not exist!`); }
-					throw error;
-				}
+					if (error instanceof NoMatch) {
+						res.write(`<p>Task ID "${error.taskId}" does not exist! Try again.</p>`);
+						res.write(redirectHtml("/", 2000));
+					} else {
+						throw error;
+					}
+				},
 			},
 		}
 
+		const data = url.parse(req.url, true).query;
 		/** @type {Route | undefined} */
 		const route = routes[pathInfo];
 		if (route && data) {
-			try {
-				await route.onSubmit(data);
-			} catch (error) {
-				route.catchError(error);
-			} finally {
-				res.writeHead(301, { Location: '/' });
-				res.end();
-			}
+			await route.onSubmit(data)
+				.then(() => res.writeHead(301, { Location: '/' }))
+				.catch(route.catchError)
+				.catch(console.error)
+				.finally(() => res.end());
 		}
 	}
-
 })
 
 
