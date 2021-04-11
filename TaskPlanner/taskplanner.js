@@ -169,11 +169,20 @@ async function retrieve() {
 }
 /**
  * 
+ * @param {string} taskId 
+ * @returns number
+ */
+async function findTaskIndex(taskId) {
+	const entries = await retrieve();
+	return entries.findIndex(e => e.taskId === taskId);
+}
+/**
+ * 
  * @param {Entry} entry 
  */
 async function store(entry) {
 	const entries = await retrieve();
-	if (entries.find(e => e.taskId === entry.taskId)) {
+	if (await findTaskIndex(entry.taskId) === -1) {
 		throw new DuplicateTask(null, entry.taskId);
 	}
 	entries.push(entry);
@@ -182,7 +191,7 @@ async function store(entry) {
 
 async function remove(taskId) {
 	const entries = await retrieve();
-	const match = entries.findIndex(e => e.taskId === taskId);
+	const match = await findTaskIndex(taskId);
 	if (match === -1) { throw new NoMatch(null, taskId); }
 
 	entries.splice(match, 1);
