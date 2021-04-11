@@ -21,11 +21,12 @@ const deleteTaskHtml = async () => Promise.resolve(`
 	</form>
 `);
 const listTaskBtnHtml = async (opt) => Promise.resolve(`
-	<button onClick="${opt.onClick}()">List Task</button>
+	<script>${opt.onClick.toString()}</script>
+	<button onClick="${opt.onClick.name}()">List Tasks</button>
 `);
 const listTaskHtml = async () => {
 	const asTable = (rows) => `
-		<table>
+		<table id="tasksTable" style="display: none">
 			<thead>
 				<tr>
 					<th>Employee ID</th>
@@ -49,10 +50,9 @@ const listTaskHtml = async () => {
 			${entry.asFormattedEntries().map(([_, v]) => `<td>${v}</td>`).join("\n")}
 		</tr>
 	`
-
-
 	return retrieve()
 		.then(entries => entries.map(asRow))
+		.then(rows => rows.join("\n"))
 		.then(asTable)
 }
 
@@ -70,8 +70,19 @@ async function addTaskOnSubmit(urlQuery) {
 	return store(entry);
 }
 
-function listTaskBtnHtmlOnClick(e) {
+/**
+ * 
+ * @param {{[key: string]: any}} urlQuery 
+ */
+async function deleteTaskOnSubmit(urlQuery) {
+	const { taskId } = urlQuery;
+	return remove(taskId);
+}
 
+function listTaskBtnHtmlOnClick(e) {
+	let table = document.getElementById("tasksTable");
+	let state = table.style.display;
+	table.style.display = state === "none" ? "table" : "none";
 }
 
 /*
@@ -104,6 +115,10 @@ class Entry {
 		})
 	}
 
+	/**
+	 * 
+	 * @returns {[keyof Entry, string | Date][]}
+	 */
 	asFormattedEntries() {
 		return ["empId", "taskId", "taskDesc", "deadline"].map(key => {
 			if (key === "deadline") {
@@ -138,37 +153,34 @@ const dbFile = "tasks.json";
  * @returns {Promise<Entry[]>}
  */
 async function retrieve() {
-	return fs.readFile(dbFile)
+	/** @type {Array<{[key: string]: any}>} */
+	const data = await fs.readFile(dbFile)
 		.then(JSON.parse)
-		.then(data => { console.log("data: ", data); return data; })
-		.then(data => data !== null ? data : [])
-		.then(data => data.map(entry => {
-			try {
-				return new Entry(entry);
-			} catch (error) {
-				if (error instanceof TypeError) { return null; }
-			}
-		}))
-		.then(data => data.filter(item => item !== null))
+		.catch(error => { if (error instanceof SyntaxError) { return []; } throw error; })
+
+	return data.reduce(
+		/** @param {Entry[]} entries */
+		(entries, obj) => {
+			try { entries.push(new Entry(obj)); }
+			catch (error) { if (error instanceof TypeError) { console.warn(error); } throw error; }
+
+			return entries;
+		}, [])
 }
 /**
  * 
  * @param {Entry} entry 
  */
 async function store(entry) {
-	return retrieve()
-		.then(entries => {
-			if (entries.find(e => e.taskId === entry.taskId)) {
-				throw new DuplicateTask(null, entry.taskId);
-			}
-			return entries.concat(entry);
-		})
-		.then(payload => JSON.stringify(payload, null, 2))
-		.then(json => fs.writeFile(dbFile, json));
+	const entries = await retrieve();
+	if (entries.find(e => e.taskId === entry.taskId)) {
+		throw new DuplicateTask(null, entry.taskId);
+	}
+	entries.push(entry);
+	return fs.writeFile(dbFile, JSON.stringify(entries, null, 2));
 }
 
 async function remove(taskId) {
-
 	const entries = await retrieve();
 	const match = entries.findIndex(e => e.taskId === taskId);
 	if (match === -1) { throw new NoMatch(null, taskId); }
@@ -184,34 +196,53 @@ async function remove(taskId) {
 let server = http.createServer(async (req, res) => {
 	const pathInfo = url.parse(req.url, true).pathname;
 
-	if (pathInfo === "/addTask") {
-		const data = url.parse(req.url, true).query;
-		console.log("urlData: ", data);
-		if (data) {
-			try {
-				await addTaskOnSubmit(data);
-			} catch (error) {
-				if (error instanceof DuplicateTask) {
-					console.log("Duplicate task! ", error);
-				}
-				console.error(error);
-			}
-		}
-		res.writeHead(301, { Location: '/' });
-		res.end();
-	}
-	else if (pathInfo === "/") {
+	if (pathInfo === "/") {
 		res.setHeader("content-type", "text/html");
 		Promise.all([
 			addTaskHtml(),
 			deleteTaskHtml(),
-			listTaskBtnHtml({ onclick: "listTaskBtnHtmlOnClick" }),
+			listTaskBtnHtml({ onClick: listTaskBtnHtmlOnClick }),
 			listTaskHtml(),
 		])
 			.then(fragments => fragments.join("\n"))
 			.then(html => res.write(html))
 			.catch(console.error)
 			.finally(() => res.end());
+	} else {
+		const data = url.parse(req.url, true).query;
+
+		/**@typedef {{onSubmit: Promise<void>, catchError: (error: Error) => {}}} Route */
+
+		/** @type {Route[]} */
+		const routes = {
+			"/addTask": {
+				"onSubmit": addTaskOnSubmit,
+				"catchError": (error) => {
+					if (error instanceof DuplicateTask) { console.log("Duplicate task! ", error); }
+					console.error(error);
+				}
+			},
+			"/deleteTask": {
+				"onSubmit": deleteTaskOnSubmit,
+				"catchError": (error) => {
+					if (error instanceof NoMatch) { alert(`Task (id=${error.taskId}) does not exist!`); }
+					throw error;
+				}
+			},
+		}
+
+		/** @type {Route | undefined} */
+		const route = routes[pathInfo];
+		if (route && data) {
+			try {
+				await route.onSubmit(data);
+			} catch (error) {
+				route.catchError(error);
+			} finally {
+				res.writeHead(301, { Location: '/' });
+				res.end();
+			}
+		}
 	}
 
 })
