@@ -16,17 +16,17 @@ const addTaskHtml = async () => Promise.resolve(`
 `);
 const deleteTaskHtml = async () => Promise.resolve(`
 	<form action="/deleteTask" method="get">
-		<label> Task ID <input type="text" name="taskId"> </label>
+		<label> Task ID <input type="text" name="taskId" required> </label>
 		<button type="submit">Delete Task</button>
 	</form>
 `);
 const listTaskBtnHtml = async (opt) => Promise.resolve(`
 	<script>${opt.onClick.toString()}</script>
-	<button onClick="${opt.onClick.name}()">List Tasks</button>
+	<button id="listTasksBtn" onClick="${opt.onClick.name}()">Hide Tasks</button>
 `);
 const listTaskHtml = async () => {
 	const asTable = (rows) => `
-		<table id="tasksTable" style="display: none">
+		<table id="tasksTable">
 			<thead>
 				<tr>
 					<th>Employee ID</th>
@@ -75,14 +75,18 @@ async function addTaskOnSubmit(urlQuery) {
  * @param {{[key: string]: any}} urlQuery 
  */
 async function deleteTaskOnSubmit(urlQuery) {
-	const { taskId } = urlQuery;
+	let { taskId } = urlQuery;
+	if (typeof taskId === "number") { taskId = taskId.toString(); }
+	console.log("deleteTask: ", taskId, JSON.stringify(taskId));
 	return remove(taskId);
 }
 
 function listTaskBtnHtmlOnClick(e) {
 	let table = document.getElementById("tasksTable");
+	let btn = document.getElementById("listTasksBtn");
 	let state = table.style.display;
 	table.style.display = state === "none" ? "table" : "none";
+	btn.innerText = state === "none" ? "List Tasks" : "Hide Tasks";
 }
 
 /*
@@ -182,7 +186,7 @@ async function findTaskIndex(taskId) {
  */
 async function store(entry) {
 	const entries = await retrieve();
-	if (await findTaskIndex(entry.taskId) === -1) {
+	if (await findTaskIndex(entry.taskId) !== -1) {
 		throw new DuplicateTask(null, entry.taskId);
 	}
 	entries.push(entry);
@@ -192,9 +196,11 @@ async function store(entry) {
 async function remove(taskId) {
 	const entries = await retrieve();
 	const match = await findTaskIndex(taskId);
+	console.log("remove: ", match, entries);
 	if (match === -1) { throw new NoMatch(null, taskId); }
 
 	entries.splice(match, 1);
+	console.log("remove2: ", entries);
 	return fs.writeFile(dbFile, JSON.stringify(entries, null, 2));
 }
 
@@ -205,7 +211,11 @@ async function remove(taskId) {
 let server = http.createServer(async (req, res) => {
 	const pathInfo = url.parse(req.url, true).pathname;
 
-	if (pathInfo === "/") {
+	if (pathInfo === "/favicon.ico") {
+		res.writeHead(404);
+		res.end();
+	}
+	else if (pathInfo === "/") {
 		res.setHeader("content-type", "text/html");
 		await Promise.all([
 			addTaskHtml(),
@@ -233,7 +243,8 @@ let server = http.createServer(async (req, res) => {
 				"onSubmit": addTaskOnSubmit,
 				"catchError": (error) => {
 					if (error instanceof DuplicateTask) {
-						res.write(`Duplicate task! (Task ID: "${error.taskId}") Try again.`)
+						console.warn(error);
+						res.write(`<p>Duplicate task! (Task ID: "${error.taskId}") Try again.</p>`)
 						res.write(redirectHtml("/", 2000));
 					} else {
 						throw error;
@@ -244,6 +255,7 @@ let server = http.createServer(async (req, res) => {
 				"onSubmit": deleteTaskOnSubmit,
 				"catchError": (error) => {
 					if (error instanceof NoMatch) {
+						console.warn(error);
 						res.write(`<p>Task ID "${error.taskId}" does not exist! Try again.</p>`);
 						res.write(redirectHtml("/", 2000));
 					} else {
@@ -256,6 +268,7 @@ let server = http.createServer(async (req, res) => {
 		const data = url.parse(req.url, true).query;
 		/** @type {Route | undefined} */
 		const route = routes[pathInfo];
+		console.log("route", route, pathInfo);
 		if (route && data) {
 			await route.onSubmit(data)
 				.then(() => res.writeHead(301, { Location: '/' }))
