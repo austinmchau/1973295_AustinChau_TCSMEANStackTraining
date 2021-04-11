@@ -156,7 +156,7 @@ class Entry {
 	asFormattedEntries() {
 		return ["empId", "taskId", "taskDesc", "deadline"].map(key => {
 			if (key === "deadline") {
-				return [key, this[key].toLocaleDateString()];
+				return [key, this[key].toLocaleDateString(undefined, { timeZone: "UTC" })];
 			} else {
 				return [key, this[key]];
 			}
