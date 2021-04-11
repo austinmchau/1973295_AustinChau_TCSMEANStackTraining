@@ -108,8 +108,13 @@ function listTaskBtnHtmlOnClick(e) {
 	let table = document.getElementById("tasksTable");
 	let btn = document.getElementById("listTasksBtn");
 	let state = table.style.display;
-	table.style.display = state === "none" ? "table" : "none";
-	btn.innerText = state === "none" ? "List Tasks" : "Hide Tasks";
+	if (state === "none") {
+		btn.innerText = "Hide Tasks";
+		table.style.display = "table";
+	} else {
+		btn.innerText = "List Tasks";
+		table.style.display = "none";
+	}
 }
 
 /*
