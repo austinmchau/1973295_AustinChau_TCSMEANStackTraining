@@ -66,7 +66,6 @@ const listTaskHtml = async () => {
  */
 async function addTaskOnSubmit(urlQuery) {
 	const entry = new Entry(urlQuery);
-	console.log("addTask: ", entry, JSON.stringify(entry));
 	return store(entry);
 }
 
@@ -77,7 +76,6 @@ async function addTaskOnSubmit(urlQuery) {
 async function deleteTaskOnSubmit(urlQuery) {
 	let { taskId } = urlQuery;
 	if (typeof taskId === "number") { taskId = taskId.toString(); }
-	console.log("deleteTask: ", taskId, JSON.stringify(taskId));
 	return remove(taskId);
 }
 
@@ -196,11 +194,9 @@ async function store(entry) {
 async function remove(taskId) {
 	const entries = await retrieve();
 	const match = await findTaskIndex(taskId);
-	console.log("remove: ", match, entries);
 	if (match === -1) { throw new NoMatch(null, taskId); }
 
 	entries.splice(match, 1);
-	console.log("remove2: ", entries);
 	return fs.writeFile(dbFile, JSON.stringify(entries, null, 2));
 }
 
@@ -243,7 +239,6 @@ let server = http.createServer(async (req, res) => {
 				"onSubmit": addTaskOnSubmit,
 				"catchError": (error) => {
 					if (error instanceof DuplicateTask) {
-						console.warn(error);
 						res.write(`<p>Duplicate task! (Task ID: "${error.taskId}") Try again.</p>`)
 						res.write(redirectHtml("/", 2000));
 					} else {
@@ -255,7 +250,6 @@ let server = http.createServer(async (req, res) => {
 				"onSubmit": deleteTaskOnSubmit,
 				"catchError": (error) => {
 					if (error instanceof NoMatch) {
-						console.warn(error);
 						res.write(`<p>Task ID "${error.taskId}" does not exist! Try again.</p>`);
 						res.write(redirectHtml("/", 2000));
 					} else {
@@ -268,7 +262,6 @@ let server = http.createServer(async (req, res) => {
 		const data = url.parse(req.url, true).query;
 		/** @type {Route | undefined} */
 		const route = routes[pathInfo];
-		console.log("route", route, pathInfo);
 		if (route && data) {
 			await route.onSubmit(data)
 				.then(() => res.writeHead(301, { Location: '/' }))
@@ -281,7 +274,7 @@ let server = http.createServer(async (req, res) => {
 
 
 function run(port = 9000) {
-	server.listen(port, () => console.log(`Server started on port ${port}.`));
+	server.listen(port, () => console.info(`Server started on port ${port}.`));
 }
 
 /**
