@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>ChatSocketIO</title>
+	<script src="/socket.io/socket.io.js"></script>
+	<script>
+		var socket = io();
+	</script>
+</head>
+
+<body>
+	<form id="sendMessage">
+		<div class="row">
+			<div class="column">
+				<label for="nameInput">Name</label>
+			</div>
+			<div class="column">
+				<input type="text" name="nameInput" id="nameInput" required>
+			</div>
+		</div>
+		<div class="row">
+			<div class="column">
+				<label for="messageField">Message</label>
+			</div>
+			<div class="column">
+				<textarea name="messageField" id="messageField" cols="30" rows="10"></textarea>
+			</div>
+		</div>
+		<button type="submit">Send</button>
+	</form>
+	<script>
+		var form = document.getElementById("sendMessage");
+		form.addEventListener("submit", function sendMessage(event) {
+			var nameInput = document.getElementById("nameInput");
+			var messageField = document.getElementById("messageField");
+			var payload = { name: nameInput, msg: messageField };
+			socket.emit("newChatMessage", payload);
+			event.preventDefault();
+			form.reset();
+		});
+	</script>
+</body>
+
+</html>
