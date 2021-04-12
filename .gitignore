@@ -10,3 +10,6 @@
 
 # source code zip files
 */*.zip
+
+# Node JS
+*/node_modules
