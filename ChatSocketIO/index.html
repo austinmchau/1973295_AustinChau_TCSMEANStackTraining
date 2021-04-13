@@ -6,43 +6,62 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>ChatSocketIO</title>
+	<link rel="stylesheet" href="index.css">
 	<script src="/socket.io/socket.io.js"></script>
 	<script>
 		var socket = io();
+
+		document.addEventListener("DOMContentLoaded", function () {
+
+			var form = document.getElementById("sendMessage");
+			form.addEventListener("submit", function sendMessage(event) {
+				var nameInput = document.getElementById("nameInput").value;
+				var messageField = document.getElementById("messageField").value;
+				var payload = { name: nameInput, msg: messageField };
+				console.log("payload: ", payload);
+				socket.emit("newChatMessage", payload);
+				event.preventDefault();
+				form.reset();
+			});
+
+		})
 	</script>
+	<style>
+
+	</style>
+	
 </head>
 
 <body>
 	<form id="sendMessage">
+    <div class="row header">
+      <h1>
+        Chat with Console
+      </h1>
+    </div>
 		<div class="row">
-			<div class="column">
+			<div class="column-label">
 				<label for="nameInput">Name</label>
 			</div>
 			<div class="column">
-				<input type="text" name="nameInput" id="nameInput" required>
+				<input type="text" name="nameInput" id="nameInput" placeholder="Your name" required>
 			</div>
 		</div>
 		<div class="row">
-			<div class="column">
+			<div class="column-label">
 				<label for="messageField">Message</label>
 			</div>
 			<div class="column">
-				<textarea name="messageField" id="messageField" cols="30" rows="10"></textarea>
+				<textarea name="messageField" id="messageField" placeholder="Your message" required></textarea>
 			</div>
 		</div>
-		<button type="submit">Send</button>
+    <div class="row">
+			<div class="column-label"></div>
+			<div class="column">
+      		<button type="submit">Send</button>
+			</div>
+		</div>
 	</form>
-	<script>
-		var form = document.getElementById("sendMessage");
-		form.addEventListener("submit", function sendMessage(event) {
-			var nameInput = document.getElementById("nameInput");
-			var messageField = document.getElementById("messageField");
-			var payload = { name: nameInput, msg: messageField };
-			socket.emit("newChatMessage", payload);
-			event.preventDefault();
-			form.reset();
-		});
-	</script>
 </body>
 
 </html>

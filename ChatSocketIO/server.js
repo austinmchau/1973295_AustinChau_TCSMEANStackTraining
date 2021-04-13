@@ -14,12 +14,18 @@ const io = require("socket.io")(server);
  * @param {Message} message 
  */
 function onNewChatMessage(socket, message) {
-	const displayMsg = `
-		[User("${socket.id}")]
-		Hello, "${message.name}".
-		Your message: ${message.msg}
-	`
-	console.log(displayMsg);
+	const { name, msg } = message;
+	if ([name, msg].find(i => typeof i !== "string")) {
+		console.error(`Message is Invalid! ${JSON.parse(message)}`);
+	} else {
+		const displayMsg = [
+			// `[User("${socket.id}")]`,
+			`Hello, "${name}".`,
+			`Your message: ${msg}`,
+			""
+		].join("\n");
+		console.log(displayMsg);
+	}
 }
 
 /** * MARK: - Driver Functions */
@@ -28,6 +34,10 @@ function onNewChatMessage(socket, message) {
 app.get("/", (req, res) => {
 	res.sendFile(__dirname + "/index.html");
 });
+app.get("/index.css", (req, res) => {
+	res.setHeader("Content-Type", "text/css")
+	res.sendFile(__dirname + "/index.css");
+})
 
 /** * Socket Management */
 io.on("connection", (socket) => {
