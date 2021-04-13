@@ -7,11 +7,12 @@ const io = require("socket.io")(server);
 
 /** * MARK: - Callbacks */
 
-/** @typedef {{name: string, msg: string}} Message */
+/** @typedef {{name: string, msg: string}} Message a Chat Message */
 
 /**
- * 
- * @param {Message} message 
+ * Function to receive socket new chat message from frontend
+ * @param {any} socket a reference to the socket
+ * @param {Message} message new chat message
  */
 function onNewChatMessage(socket, message) {
 	const { name, msg } = message;
@@ -19,7 +20,6 @@ function onNewChatMessage(socket, message) {
 		console.error(`Message is Invalid! ${JSON.parse(message)}`);
 	} else {
 		const displayMsg = [
-			// `[User("${socket.id}")]`,
 			`Hello, "${name}".`,
 			`Your message: ${msg}`,
 			""
@@ -34,6 +34,7 @@ function onNewChatMessage(socket, message) {
 app.get("/", (req, res) => {
 	res.sendFile(__dirname + "/index.html");
 });
+/** * Serve a CSS file quickly from root dir */
 app.get("/index.css", (req, res) => {
 	res.setHeader("Content-Type", "text/css")
 	res.sendFile(__dirname + "/index.css");
@@ -42,11 +43,17 @@ app.get("/index.css", (req, res) => {
 /** * Socket Management */
 io.on("connection", (socket) => {
 	console.log(`User("${socket.id}") connected.`);
-
 	socket.on("newChatMessage", (msg) => onNewChatMessage(socket, msg))
 });
 
 /** * Activate server */
-server.listen(9000, () => {
-	console.log("Server running on *:9000");
-});
+function run(port = 9000) {
+	server.listen(port, () => {
+		console.log(`Server running on *:${port}`);
+	});
+}
+
+/** * Main entry point when called from cli */
+if (typeof require !== 'undefined' && require.main === module) {
+	run();
+}
