@@ -4,20 +4,23 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Course Platform</title>
+	<title>Delete Course</title>
 	<link rel="stylesheet" href="main.css">
 </head>
 <body>
 	<header>
-		<h1>Course Platform</h1>
+		<h1>Delete Course</h1>
 	</header>
 	<main>
-		<ul>
-			<li><a href="addCourse">Add Course</a></li>
-			<li><a href="updateCourse">Update Course</a></li>
-			<li><a href="deleteCourse">Delete Course</a></li>
-			<li><a href="fetchCourses">Fetch Courses</a></li>
-		</ul>
+		<form action="">
+			<div>
+				<label for="courseId">Course ID</label>
+				<input type="text" name="courseId" id="courseId">
+			</div>
+			<div>
+				<button type="submit">Delete</button>
+			</div>
+		</form>
 	</main>
 </body>
 </html>
