@@ -1,12 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>List of Courses</title>
 	<link rel="stylesheet" href="main.css">
+	<script>
+		document.addEventListener("DOMContentLoaded", async function () {
+			const response = await fetch("/fetchCourses/courses");
+			const entries = await response.json();
+			const rows = (Array.isArray(entries) ? entries : []).map(
+				({ _id, courseName, description, amount }) => {
+					const amountNumeric = Number(amount);
+					const row = [
+						_id ?? "<empty>",
+						courseName ?? "<empty>",
+						description ?? "<empty>",
+						!isNaN(amountNumeric) ? amountNumeric.toLocaleString('en-US', { style: "currency", currency: "USD" }) : "",
+					].map(item => `<td>${item}</td>`);
+					return ["<tr>", ...row, "</tr>"].join('\n');
+				}
+			).join('\n');
+			document.getElementById("coursesTableBody").innerHTML = rows;
+		})
+	</script>
 </head>
+
 <body>
 	<header>
 		<h1>List of Courses</h1>
@@ -21,10 +42,9 @@
 					<th>Amount</th>
 				</tr>
 			</thead>
-			<tbody>
-
-			</tbody>
+			<tbody id="coursesTableBody"></tbody>
 		</table>
 	</main>
 </body>
+
 </html>
