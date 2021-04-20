@@ -2,6 +2,7 @@ const express = require("express");
 const http = require("http");
 const app = express();
 const server = http.createServer(app);
+const dbModel = require("./dbmodel");
 
 /** * Middleware */
 app.use(express.urlencoded({ extended: true }))
@@ -25,11 +26,31 @@ app.get("/", (req, res) => {
 	});
 })
 
+const redirectHtml = (path, ms) => `
+	<script>
+		setTimeout(function () {
+			window.location = "${path}";
+		}, ${ms})
+	</script>	
+`
 /** * CRUD operations */
-app.post("/addCourse/submit", (req, res) => {
+app.post("/addCourse/submit", async (req, res) => {
 	const data = req.body;
 	console.log("data: ", data);
-	res.send("Courses added successfully.");
+	try {
+		await dbModel.addCourse(data);
+		res.status(200).send(
+			redirectHtml("/", 2000) +
+			"Courses added successfully."
+		);
+	}
+	catch (error) {
+		console.error(error);
+		res.status(500).send(
+			redirectHtml("/", 2000) +
+			"Course fail to be added."
+		);
+	}
 })
 
 /** * Activate server */
