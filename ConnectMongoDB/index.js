@@ -3,6 +3,10 @@ const http = require("http");
 const app = express();
 const server = http.createServer(app);
 
+/** * Middleware */
+app.use(express.urlencoded({ extended: true }))
+app.use(express.json());
+
 /** * MARK: - Driver Functions */
 
 /** * Serve a CSS file quickly from root dir */
