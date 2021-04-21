@@ -1,0 +1,108 @@
+@font-face {
+    font-family: "Segoe UI";
+    font-weight: 400;
+    src: local("Segoe UI");
+}
+
+:root {
+  --font-family: "Segoe UI", Arial, sans-serif;
+  --msg-box-width: 460px;
+  --bg-success: #4caf50;
+  --bg-light:  #f3f2f1;
+  --bg-light-secondary: #edebe9;
+  --text-white: white;
+  --text-primary: #323130;
+  --text-primary-alt: #3b3a39;
+  --text-secondary: #605e5c;
+  --div-radius: 0.25rem;
+  --box-shadow-depth-4: 0 1.6px 3.6px 0 rgb(0 0 0 / 13%), 0 0.3px 0.9px 0 rgb(0 0 0 / 11%);
+  --box-shadow-depth-16: 0 6.4px 14.4px 0 rgb(0 0 0 / 13%), 0 1.2px 3.6px 0 rgb(0 0 0 / 11%);
+}
+
+
+
+body {
+  font: 1rem var(--font-family);
+  color:  var(--text-primary);
+  background-color: var(--bg-light-secondary);
+}
+
+
+button {
+  padding: 0.5rem 1rem;
+  font: 1rem var(--font-family);
+  border-radius: var(--div-radius);
+  background-color: var(--bg-success);
+  border: none;
+  color: var(--text-white);
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  max-width: fit-content;
+  box-shadow: var(--box-shadow-depth-4);
+}
+button:hover, button:focus {
+  box-shadow: var(--box-shadow-depth-16);
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+::placeholder {
+  color: var(--text-secondary);
+}
+label {
+  color: var(--text-primary-alt);
+}
+
+input[type="text"],
+textarea {
+  /* outline: solid; */
+  padding: 0 1ch;
+  font-family: var(--font-family);
+  border: none;
+  background-color: white;
+  line-height: 2rem;
+  border-radius: var(--div-radius);
+  box-shadow: var(--box-shadow-depth-4);
+}
+input[type="text"]:focus,
+textarea:focus {
+  outline: none;
+  box-shadow: var(--box-shadow-depth-16);
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+}
+.row ~ .row {
+  /* border: 1px solid red; */
+  margin-top: 1rem;
+}
+.header :is(h1, h2, h3, h4, h5, h6) {
+  margin: 0rem;
+}
+.column ,
+.column-label {
+  display: flex;
+  flex: 4 1;
+}
+.column-label {
+  flex: 1 1;
+}
+.column-label label:after {
+  content: ":"
+}
+.column * {
+  flex: 1;
+}
+
+#sendMessage {
+  border-radius: var(--div-radius);
+  box-shadow: var(--box-shadow-depth-16);
+  padding: 1rem;
+  max-width: var(--msg-box-width);
+  margin: 0 auto;
+  background-color: var(--bg-light);
+}
