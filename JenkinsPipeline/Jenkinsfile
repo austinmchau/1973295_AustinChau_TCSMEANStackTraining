@@ -2,25 +2,29 @@ pipeline {
     agent any
     tools {nodejs "nodejs16"}        
     stages {
-        stage("Check Node Version"){
+        stage("Version Check"){
             steps {
-            sh "node --version"
+                sh "node --version"
             }
         }
-        stage("install dependencies"){
+        stage("Dependencies Installation"){
             steps {
-            sh "npm --version"
-            sh "npm install"
+                dir("JenkinsPipeline") {
+                    sh "npm --version"
+                    sh "npm install"
+                }
             }
         }
-        stage("Test"){
+        stage("Test Application"){
             steps {
-            sh "node app.js"
+                dir("JenkinsPipeline") {
+                    sh "node app.js"
+                }
+            }
         }
-        }
-        stage("Release the version"){
+        stage("Deployment"){
             steps {
-            echo "Release the Version"
+                echo "Release the Version"
             }
         }
     }
