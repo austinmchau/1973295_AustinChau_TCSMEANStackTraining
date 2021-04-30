@@ -20,6 +20,11 @@ async function getClient() {
 	return client;
 }
 
+/**
+ * Writing the socket message into MongoDB
+ * @param { string } name
+ * @param { string } msg
+ */
 async function addMessage({ name, msg }) {
 	try {
 		const invalidProp = [name, msg].find(prop => typeof prop !== "string");
